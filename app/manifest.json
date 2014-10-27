@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "Mesh²",
+    "description": "Media Server For Humans",
+    "version": "1.0",
+    "icons": {
+        "128": "images/favicon-128.png",
+        "64": "images/favicon-64.png",
+        "32": "images/favicon-32.png"
+    },
+    "app": {
+        "urls": [
+            "http://rasigade.fr/mesh2/index.html"
+        ],
+        "launch": {
+            "web_url": "http://rasigade.fr/mesh2/index.html#/19/"
+        }
+    },
+    "permissions": [
+        "unlimitedStorage",
+        "notifications"
+    ]
+}
