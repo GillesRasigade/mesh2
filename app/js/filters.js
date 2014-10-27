@@ -43,16 +43,16 @@ mesh
                 if ( size > 1000 ) { size /= 1000; unit = 'Go'; }
                 if ( size > 1000 ) { size /= 1000; unit = 'To'; }
                 
-                text += '<i class="glyphicon glyphicon-hdd"></i>&nbsp;<sub>'+Math.floor(size) + '&nbsp;' + unit + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-hdd"></i>&nbsp;<sub style="font-size: 0.9em">'+Math.floor(size) + '&nbsp;' + unit + '</sub> &nbsp; ';
             }
             if ( $scope.statistics[_folder].directories ) {
-                text += '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;<sub>'+$scope.statistics[_folder].directories + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].directories + '</sub> &nbsp; ';
             }
             if ( $scope.statistics[_folder].images ) {
-                text += '<i class="glyphicon glyphicon-picture"></i>&nbsp;<sub>'+$scope.statistics[_folder].images + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-picture"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].images + '</sub> &nbsp; ';
             }
             if ( $scope.statistics[_folder].videos ) {
-                text += '<i class="glyphicon glyphicon-film"></i>&nbsp;<sub>'+$scope.statistics[_folder].videos + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-film"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].videos + '</sub> &nbsp; ';
             }
         }
         

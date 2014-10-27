@@ -10,13 +10,17 @@
 
 
 <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" style="position:absolute; top:-100px;" />
-<div id="add-files" >
+
+<div id="add-directory" class="round-action left" ng-click="createDirectory()">
+    <i class="glyphicon glyphicon-folder-open" style="font-size: 0.8em;"></i>
+</div>
+
+<div id="add-files" class="round-action">
     <div class="actions">
         <i class="glyphicon glyphicon-cloud-upload"></i>
-        <i class="glyphicon glyphicon-folder-open" ng-click="createDirectory()" title="Create directory" style="font-size: 0.8em;"></i>
-        <i class="glyphicon glyphicon-file" id="select-files-for-upload" title="Select files to upload" style="font-size: 0.8em;"></i>
+        
     </div>
-    <span id="add-files-label"></span>
+    <i class="glyphicon glyphicon-file" id="select-files-for-upload" title="Select files to upload" style="font-size: 0.8em; margin-left: 5px;"></i>
     <div id="upload-progress"></div>
 </div>
 

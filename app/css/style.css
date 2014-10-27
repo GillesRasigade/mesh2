@@ -99,12 +99,13 @@ body {
     border-color: #ddd !important;
 }
 
-#add-files {
+
+.round-action {
     position: fixed;
     z-index: 9998;
     background-color: #888;
-    bottom: 0.5em;
-    right: 0.5em;
+    bottom: 0em;
+    right: 0em;
     border-radius: 100%;
     width: 100px;
     height: 100px;
@@ -117,31 +118,24 @@ body {
     border: 10px solid rgba(238,238,238,1);
     overflow: hidden;
 }
-
-@media (min-width: 0px) and (max-width: 991px) {
-  #add-files {
-    bottom: -0.5em;
-    right: -0.5em;
-  }
+.round-action.left {
+    right: auto;
+    left 0.5em;
 }
-
 #add-files.dragover,
-#add-files:hover {
+.round-action:hover {
     background-color: red;
 }
 
-#add-files > div.actions {
-    margin-top: 0%;
-}
-
-#add-files:hover > div.actions {
-    -webkit-transition-delay: 1s;
-    transition-delay: 1s;
-    transition-property: margin-top;
-    transition-duration: 1s;
-
-    margin-top: -100%;
-    margin-bottom: 100%;
+@media (min-width: 0px) and (max-width: 991px) {
+  .round-action {
+    bottom: -0.5em;
+    right: -0.5em;
+  }
+  .round-action.left {
+    right: auto;
+    left: -0.5em;
+  }
 }
 
 #upload-progress {
@@ -162,11 +156,10 @@ body {
     pointer-events: none;
 }
 
-#add-files.dragover #add-files-label,
-#add-files:hover #add-files-label {
+#add-files.dragover > .glyphicon {
     display: none !important;
 }
-#add-files .glyphicon {
+#add-files > div.actions .glyphicon {
     display: none;
 }
 #add-files:hover .glyphicon-folder-open {
@@ -176,7 +169,7 @@ body {
     display: inline-block;
 }
 #add-files.dragover .glyphicon-cloud-upload {
-    display: inline-block;
+    display: inline-block !important;
 }
 
 #list {
