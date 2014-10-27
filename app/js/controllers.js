@@ -103,7 +103,6 @@ mesh
     $scope.showImage = '';
     $scope.showVideo = '';
     
-    
     if ( undefined === mesh._servers ) {
         mesh._servers = {
             "local": {
@@ -114,6 +113,8 @@ mesh
             }
         }
     }
+    
+    $scope.servers = mesh._servers;
     
     $scope.search = function() {
         var delay = 500;
@@ -155,7 +156,7 @@ mesh
             if ( ''==o ) {
                 
                 breadcrumb.innerHTML += '\
-                <li class="'+( i+1 == len ? 'active' : '' )+'">\
+                <li class="dropdown '+( i+1 == len ? 'active' : '' )+'">\
                     <a href="#/'+$scope.server+'/'+_path+'">'+
                         (''==o?'<b><i class="glyphicon glyphicon-hdd"></i> <sub>' + $scope.server + '</sub></b>' : o )+
                     '</a>\
