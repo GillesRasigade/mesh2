@@ -1,6 +1,4 @@
 
-
-
 // External modules and application variables definition:
 var fs = require("fs-extra"),
     p = require("path"),
@@ -57,14 +55,11 @@ var commandRegEx = /^\/([a-zA-Z0-9_\.~-]+)\/([a-zA-Z0-9_\.~-]+)\/(.*)/,  // /{ke
     pathRegEx = /^\/([a-zA-Z0-9_\.~-]+)\/(.*)/;  // /{key}/{path}
 
 function loadConfig( path ) {
-    try {
-        var _config = JSON.parse(fs.readFileSync(path, 'utf8'));
+    
+    var _config = JSON.parse(fs.readFileSync(path, 'utf8'));
         
-        config = _config;
-        
-    } catch ( e ) {
-        console.error( e );
-    }
+    config = _config;
+    
 }
 
 /**
