@@ -1,0 +1,418 @@
+
+@import '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
+
+/*@import '/fsapi/app/lib/bootstrap/bootstrap.min.css';*/
+
+body {
+  background-color: #eee;
+}
+
+#signin {
+    position: relative;
+    top: 0.6em;
+}
+
+#signin.signedIn {
+    border-left: 1px solid #eee;
+    padding-left: 1em;
+    height: 2.5em;
+    display: inline-block;
+}
+
+#about {
+    background-color: white;
+}
+
+.navbar.header {
+    background-color: #ddd;
+    box-shadow: 0px 0px 5px #666;
+}
+
+#ng-view {
+    margin-top: 50px;
+}
+
+#breadcrumb-parent {
+    /*float: left;*/
+    overflow-x: auto;
+    /*max-width: 65%;*/
+}
+
+.mini-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+.mini-scroll::-webkit-scrollbar-track:hover {
+    background: rgba(0,0,0,0);
+}
+.mini-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.1);
+}
+.mini-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.5);
+}
+.mini-scroll::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0,0,0,0.1);
+}
+
+#breadcrumb {
+    overflow: hidden;
+    white-space: nowrap;
+    height: 100%;
+    display: inline-block;
+    margin: 0px;
+}
+
+#breadcrumb > li {
+    float: none;
+    display: inline-block;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #444;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    background-color: transparent;
+    color: #333;
+    /*text-decoration: underline;*/
+    font-weight: bold;
+}
+
+#breadcrumb > li > *:last-child:after {
+    content: "/";
+    margin-left: 10px;
+    margin-right: -20px;
+    font-size: 1.5em;
+    color: #ccc;
+    text-decoration: inherit;
+}
+
+#s {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+    /*outline: 0 !important;*/
+    box-shadow: none !important;
+    border-color: #ddd !important;
+}
+
+#add-files {
+    position: fixed;
+    z-index: 9998;
+    background-color: #888;
+    bottom: 0.5em;
+    right: 0.5em;
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 80px;
+    font-size: 58px;
+    color: white;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.1s;
+    border: 10px solid rgba(238,238,238,1);
+    overflow: hidden;
+}
+
+@media (min-width: 0px) and (max-width: 991px) {
+  #add-files {
+    bottom: -0.5em;
+    right: -0.5em;
+  }
+}
+
+#add-files.dragover,
+#add-files:hover {
+    background-color: red;
+}
+
+#add-files > div.actions {
+    margin-top: 0%;
+}
+
+#add-files:hover > div.actions {
+    -webkit-transition-delay: 1s;
+    transition-delay: 1s;
+    transition-property: margin-top;
+    transition-duration: 1s;
+
+    margin-top: -100%;
+    margin-bottom: 100%;
+}
+
+#upload-progress {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    margin-top: -0%;
+    background-color: blue;
+    opacity: 0.75;
+    z-index: -1;
+}
+#add-files-label:after {
+    content: "+";
+}
+#add-files > div.actions *:not(.glyphicon),
+#add-files.dragover > div.actions,
+#add-files > div:not(.actions) {
+    pointer-events: none;
+}
+
+#add-files.dragover #add-files-label,
+#add-files:hover #add-files-label {
+    display: none !important;
+}
+#add-files .glyphicon {
+    display: none;
+}
+#add-files:hover .glyphicon-folder-open {
+    display: inline-block;
+}
+#add-files:hover .glyphicon-file {
+    display: inline-block;
+}
+#add-files.dragover .glyphicon-cloud-upload {
+    display: inline-block;
+}
+
+#list {
+    position: fixed;
+    left: 0px; right: 0px; top: 50px; bottom: 0px;
+    overflow-y: auto;
+    /*padding-bottom: 50%;*/
+    padding-top: 10px;
+}
+
+#show-panel {
+    user-select: none;
+    position: fixed;
+    top: 0px; left: 0px; right: 0px; bottom: 0px;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    vertical-align: middle;
+    text-align: center;
+    padding: 2em;
+}
+
+#show-panel .object {
+    max-height:95%;max-width:95%;height:auto;position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid white;
+    box-shadow: 0px 0px 50px #333;
+}
+
+.show-lateral {
+    width: 20%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    color: white;
+    vertical-align: middle;
+    font-size: 5em;
+    color: rgba(255,255,255,0.15);
+    transition: color ease-in-out 0.2s;
+    z-index: 9999;
+    cursor: pointer;
+}
+.show-lateral:hover {
+    color: rgba(255,255,255,0.85);
+}
+.show-lateral > span {
+    position: absolute;
+    top: 50%;
+    height: 3em;
+    margin-top: -1.5em;
+    line-height: 3em;
+    display: block;
+}
+.show-lateral.left {
+    left: 0em;
+}
+.show-lateral.right {
+    right: 0em;
+}
+.show-lateral.right > span {
+    right: 0px;
+}
+
+.highlight {
+    background: #ffc;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.object,
+.files-list {
+    opacity: 1;
+    transition: opacity ease-in-out 0.2s;
+}
+
+.fadeout,
+#list.fadeout .files-list {
+    opacity: 0;
+}
+
+.directory {
+    padding: 5px;
+}
+
+.actions {
+    /*Temporaire*/
+    /*display: none;*/
+}
+
+.directory .actions {
+    float: right;
+    margin-left: -100%;
+    margin-top: -9px;
+    margin-right: -9px;
+}
+
+.actions-menu:hover .dropdown-menu,
+.dropdown-menu:not(.ng-hide) {
+    display: block !important;
+    position: relative;
+    top: 0px;
+    right: -16px;
+    margin-left: -100%;
+    margin-bottom: -100%;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+}
+.directory a,
+.directory a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.directory-inner {
+    background-color: #fff;
+    border-radius: 0px;
+    padding: 0px;
+    text-decoration: none;
+}
+
+.directory-inner:hover {
+    text-decoration: none;
+}
+
+.directory:hover .directory-thumb {
+    opacity: 0.9;
+}
+
+.directory:hover .directory-details {
+    color: black;
+}
+
+.directory-thumb-background {
+    background-color: black;
+}
+
+.directory-thumb {
+    padding-bottom: 80%;
+    background-size: cover;
+    background-position: center center;
+    background-color: #fff;
+}
+
+.list-view {
+    width: 100%;
+}
+
+.list-view .directory-inner {
+    margin-bottom: 0px;
+}
+
+.list-view .directory-thumb-background {
+    float: right;
+    width: 53px;
+}
+
+.list-view .directory-thumb {
+    padding-bottom: 53px;
+}
+
+.directory-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.directory-details {
+    font-size: 0.8em;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image {
+    padding: 1px;
+}
+
+.video.thumb,
+.image-thumb {
+    padding-bottom: 100%;
+    background-color: #e1e1e1;
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    overflow: hidden;
+}
+.video.thumb {
+    background-color: black;
+}
+.image .actions {
+    display: none;
+    float: right;
+    margin-top: -36px;
+    margin-bottom: -36px;
+    background-color: #eee;
+    opacity: 0.25;
+    border-top-left-radius: 75%;
+    
+}
+.image .actions:hover {
+    opacity: 1;
+}
+
+.image:hover .actions {
+    display: block;
+}
+
+.image .actions-menu:hover .dropdown-menu,
+.image .dropdown-menu {
+    top: -45px;
+}
+
+.image video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.video .glyphicon {
+    margin-bottom: -100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+    margin-top: -20px;
+    margin-left: -20px;
+    color: white;
+    text-shadow: 0px 0px 5px #666;
+    z-index: 9999;
+}

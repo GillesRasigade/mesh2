@@ -1,0 +1,145 @@
+
+<div id="show-panel" ng-show="showPanel" style="" ng-click="hidePanel()">
+    <div id="show-panel-previous" class="show-lateral left" ng-click="move(-1); $event.stopPropagation();"><span>&#9664;</span></div>
+    <img ng-show="!showVideo"style="" id="show-image" class="object" src=""/>
+    <video ng-show="''!=showVideo" id="show-video" class="object" controls autoplay>
+        <source id="video-src" ng-src="{{ showVideo }}" type="video/mp4"/>
+    </video>
+    <div id="show-panel-next" class="show-lateral right" ng-click="move(1); $event.stopPropagation();"><span>&#9654;</span></div>
+</div>
+
+
+<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" style="position:absolute; top:-100px;" />
+<div id="add-files" >
+    <div class="actions">
+        <i class="glyphicon glyphicon-cloud-upload"></i>
+        <i class="glyphicon glyphicon-folder-open" ng-click="createDirectory()" title="Create directory" style="font-size: 0.8em;"></i>
+        <i class="glyphicon glyphicon-file" id="select-files-for-upload" title="Select files to upload" style="font-size: 0.8em;"></i>
+    </div>
+    <span id="add-files-label"></span>
+    <div id="upload-progress"></div>
+</div>
+
+<div id="list" when-scrolled="load(true)">
+
+<!--p>{{ (folders|type:'directory').length }} folders and {{ (folders|type:'file').length }} </p-->
+
+<!--div class="container">
+    <div class="col-xs-2"-->
+        
+        <div class="container" role="form">
+            <div class="row form-group has-feedback" style="margin-bottom: 0px;">
+            
+                <div class="col-xs-12 col-sm-6">
+                  <!--label class="control-label" for="search">Input with success</label-->
+                  <input type="search" ng-change="search()" ng-model="s" class="form-control" id="s" placeholder="Search for albums and files" value="{{ s }}" style="border-radius: 1.25em;"/>
+                  <span class="glyphicon glyphicon-search form-control-feedback" style="top: 5px; right: 20px;"></span>
+            
+                </div>
+                
+                <div class="col-xs-12 col-sm-6 hidden-xs">
+                    <p style="margin-top: 13px; color: #aaa; text-shadow: 1px 1px 0px #fff; text-align: right;">
+                        <span><i>{{ busy ? 'loading...' : '' }}</i></span>
+                        <span ng-show="total>0"> &nbsp; &nbsp;
+                        {{ ( folders | type:'directory' ).length }} &nbsp;<i class="glyphicon glyphicon-folder-open"></i> &nbsp; &nbsp;
+                        {{ ( folders | type:'image' ).length }} &nbsp;<i class="glyphicon glyphicon-picture"></i> &nbsp;
+                        loaded <b>&nbsp;/&nbsp;</b> {{ total != -1 ? total : 0 }} <i class="glyphicon glyphicon-file"></i> in total &nbsp;</span>
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div id="files-list">
+            <div class="container files-list">
+            
+                <div  id="{{ folder.$$hashKey }}" ng-repeat="folder in folders | type:'directory' " class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                    <a href="#/{{server}}{{folder.path}}">
+                        <div class="directory-inner thumbnail" title="{{folder.path | rm:path }}">
+                            <!--img ng-src="{{ folder.path | thumb }}"-->
+                            <div class="directory-thumb-background">
+                                <div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}');"></div>
+                            </div>
+                            <div class="caption">
+                                <div class="actions-menu">
+                                    <div class="actions btn-group dropup">
+                                        <button class="btn btn-mini btn-link dropdown-toggle" ng-click="showMenu = ! showMenu" onClick="event.preventDefault();" data-toggle="dropdown" style="padding: 0.5em 1em;">...</button>
+                                    </div>
+                                    <ul class="dropdown-menu pull-right" ng-show="showMenu">
+                                        <!--li><a href="javascript:void(0);" ng-click="reset(folder.path)">Reset</a></li-->
+                                        <li><a href="javascript:void(0);" ng-click="rename(folder.path)">Rename</a></li>
+                                        <li><a href="javascript:void(0);" ng-click="delete(folder.path)">Delete</a></li>
+                                    </ul>
+                                </div>
+                                <div class="directory-name" ng-bind-html="folder.path | rm:path | rm:'^.*\/' | highlight:s | rm:'\\d{4}-\\d{2}-\\d{2}[^ ]*'"></div>
+                                <div class="directory-details" ng-bind-html="folder | details:this "></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+    
+        <!--/div>
+        
+        <div class="col-xs-10"-->
+        
+            <!--div class="container files-list">
+                <div id="{{ image.$$hashKey }}" ng-repeat="image in folders | type:'video' ">
+                    <div class="image col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                    
+                            <div class="video" ng-click="show('video',image)">
+                                <i class="glyphicon glyphicon-play"></i>
+                                <video>
+                                    <source src="{{ image.path | thumb | server:this }}" type="video/mp4" ss="{{ image.path | rm:'^[^\.]*\.' }}"/>
+                                </video>
+                            </div>
+                    </div>
+                </div>
+            </div-->
+    
+            <div class="container files-list">
+                <div id="{{ image.$$hashKey }}" ng-repeat="image in folders | type:'media' ">
+                    <div class="image {{ $index == 0 ? 'col-lg-6 col-md-6 col-sm-8 col-xs-12' : 'col-lg-3 col-md-3 col-sm-4 col-xs-6' }}">
+                    
+                        <div ng-if="'video'==image.type" class="video thumb" ng-click="show('video',image)">
+                            <i class="glyphicon glyphicon-play"></i>
+                            <video>
+                                <source src="{{ image.path | thumb | server:this }}" type="video/mp4" ss="{{ image.path | rm:'^[^\.]*\.' }}"/>
+                            </video>
+                        </div>
+                    
+                        <!--a href="#/{{server}}{{image.path}}"-->
+                        <a ng-if="'image'==image.type" href="javascript:void(0);" ng-click="show(image.type,image)">
+                            <div ng-if="$index == 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:1000:1000 | server:this }}');"></div>
+                            <div ng-if="$index != 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:500:500 | server:this }}');"></div>
+                        </a>
+                        
+                        
+                        <div class="actions-menu">
+                            <div class="actions btn-group dropup">
+                                <button class="btn btn-mini btn-link dropdown-toggle" ng-click="showMenu = ! showMenu" onClick="event.preventDefault();" data-toggle="dropdown" style="padding: 0.5em 1em;">...</button>
+                            </div>
+                            <ul class="dropdown-menu pull-right" ng-show="showMenu">
+                                <!--li><a href="javascript:void(0);" ng-click="reset(image.path)">Reset</a></li-->
+                                <li><a href="javascript:void(0);" ng-click="rename(image.path)">Rename</a></li>
+                                <li><a href="javascript:void(0);" ng-click="delete(image.path)">Delete</a></li>
+                                <li><a href="javascript:void(0);" ng-click="rotate(image,-90)">Rotate -90°</a></li>
+                                <li><a href="javascript:void(0);" ng-click="rotate(image,+90)">Rotate +90°</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <!--/div>
+</div-->
+
+<!--h2>Files</h2>
+<ul class="files">
+  <li ng-repeat="folder in folders | type:'file' ">
+    <a href="#{{folder.path}}">{{folder.path}}</a>
+  </li>
+</ul-->
+
+</div>

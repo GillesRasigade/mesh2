@@ -1,0 +1,20 @@
+
+<p>{{ (folders|type:'directory').length }} folders and {{ (folders|type:'file').length }} </p>
+
+
+
+<h2>Folders</h2>
+<ul class="folders">
+  <li ng-repeat="folder in folders | type:'directory' ">
+    <a href="#{{folder.path}}">{{folder.path}}</a>
+  </li>
+</ul>
+
+<h2>Files</h2>
+<ul class="files">
+  <li ng-repeat="folder in folders | type:'file' ">
+    <a href="#{{folder.path}}">{{folder.path}}</a>
+  </li>
+</ul>
+
+<a href="#/logout">logout</a>

@@ -1,0 +1,14 @@
+{
+  "name": "Node-FSAPI",
+  "version": "0.1.1",
+  "main": "server.js",
+  "dependencies": {
+    "restify": "~2.X.X",
+    "fs-extra": "~0.6.X",
+    "imagemagick": "0.1.*"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ]
+}
