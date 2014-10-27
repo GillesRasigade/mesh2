@@ -1,4 +1,16 @@
-mesh2
-=====
+[![Presentation](https://raw.github.com/billou-fr/media-manager/master/web/images/presentation.png)](http://billou-fr.github.io/mesh/)
 
-Media Server For Humans 2
+# Mesh² - Media Server For Humans
+
+# Installation
+## Clone the project
+
+    git clone https://github.com/billou-fr/mesh2.git
+
+## Install packages
+
+    npm install
+
+## Install system packages
+### imagemagick
+### ffmpeg
