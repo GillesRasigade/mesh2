@@ -4,6 +4,7 @@ var fs = require("fs-extra"),
     p = require("path"),
     im = require('imagemagick'),
     restify = require("restify"),
+    mime = require("mime"),
     exec = require('child_process').exec,
     
     ffmpeg = require('fluent-ffmpeg'),
@@ -658,6 +659,47 @@ server.get(commandRegEx, function (req, res, next) {
                         resSuccess(data, res);
                     }
                 });
+                break;
+                
+            case 'download':
+                
+                var _download = function ( path ) {
+                    // Read image parameters:
+        	        var extension = p.extname(path).substr(1);
+         	        var basename = p.basename(path,'.'+extension);
+         	        var dirname = p.dirname(path);
+         	        var mimetype = mime.lookup(path);
+                    
+                    console.log( extension , basename , dirname , mimetype );
+                    
+                    res.setHeader('Content-disposition', 'attachment; filename=' + basename);
+                    res.setHeader('Content-type', mimetype);
+                
+                    var filestream = fs.createReadStream(path);
+                    filestream.pipe(res);
+                }
+                
+                if (fs.lstatSync(path).isDirectory()) {
+                    
+                    // REF: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+                    var guid = config.tmp + '/' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                        return v.toString(16);
+                    }) + '.zip';
+                    
+                    var child = exec('zip -r "' + guid + '" "' + path + '"',function (err, stdout, stderr) {
+                                
+                        _download(guid);
+                        
+                        fs.remove(guid);
+                        
+                    });
+                    
+                } else {
+                    
+                    _download(path);
+                    
+                }
                 break;
                 
             // Output the image content itself

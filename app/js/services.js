@@ -5,6 +5,24 @@ mesh
 // - http://viralpatel.net/blogs/angularjs-service-factory-tutorial/
 .service('meshio', function( $http, $q ) {
     
+    this.url = function ( config ) {
+        
+        var url = 'http://' + ( config.server ? config.server : window.location.origin ) + ':8080/' + escape( serverKey );
+        
+        for ( var i in mesh._servers ) {
+            if ( config.server === mesh._servers[i].id ) {
+                url = mesh._servers[i].api;
+                break;
+            }
+        }
+        
+        url += escape( config.url )
+        
+        url += '?&access_token=' + mesh._auth.access_token;
+        
+        return url;
+    }
+    
     this.request = function ( config ) {
         
         if ( !mesh._auth ) return window.location.hash = '#/login';
@@ -23,6 +41,8 @@ mesh
         }
         
         config.url = url + escape( config.url )
+        
+        // config.url = this.url ( config );
         
         config.params.access_token = mesh._auth.access_token;
     
@@ -82,6 +102,18 @@ mesh
             url: '/dir/' + path,
             params: params
         }));
+    }
+    
+    this.download = function ( path , server ) {
+        if ( path ) {
+            
+            window.location = this.url({
+                server: server,
+                method: "get",
+                url: '/download/' + path
+            });
+
+        }
     }
     
     this.createDirectory = function ( path , name , server ) {
