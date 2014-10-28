@@ -5,8 +5,8 @@ angular.module('components', [])
             var raw = elm[0];
             elm.bind('scroll', function() {
                 
-                if ( mesh._data && mesh._data[scope.path] ) {
-                    mesh._data[scope.path].scrollTop = raw.scrollTop;
+                if ( mesh._data && mesh._data[scope.server+':'+scope.path] ) {
+                    mesh._data[scope.server+':'+scope.path].scrollTop = raw.scrollTop;
                 }
                 
                 if (raw.scrollTop + raw.offsetHeight + 3*screen.height/4 >= raw.scrollHeight ) {

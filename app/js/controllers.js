@@ -215,6 +215,8 @@ mesh
                 
                 $scope.busy = false;
                 
+                console.log( 'scroll' , $scope.scrollTop );
+                
                 var _class = document.getElementById('files-list').getAttribute('class') + ''
                 document.getElementById('files-list').setAttribute('class',_class.replace(/ ?fadeout/,'') );
                 
