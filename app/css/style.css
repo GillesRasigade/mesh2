@@ -28,6 +28,10 @@ body {
     box-shadow: 0px 0px 5px #666;
 }
 
+.form-control {
+    border-radius: 0px;
+}
+
 #ng-view {
     margin-top: 50px;
 }
@@ -129,12 +133,18 @@ body {
 
 @media (min-width: 0px) and (max-width: 991px) {
   .round-action {
-    bottom: -0.5em;
-    right: -0.5em;
+    bottom: -0.3em;
+    right: -0.3em;
+    border-width: 0px;
+    width: 80px; height: 80px;
+    opacity: 0.75;
   }
   .round-action.left {
     right: auto;
-    left: -0.5em;
+    left: -0.3em;
+  }
+  .round-action:hover {
+      opacity: 1;
   }
 }
 
@@ -301,7 +311,7 @@ body {
 }
 
 .directory:hover .directory-details {
-    color: black;
+    color: #666;
 }
 
 .directory-thumb-background {
@@ -339,7 +349,7 @@ body {
 }
 .directory-details {
     font-size: 0.8em;
-    color: #999;
+    color: #bbb;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

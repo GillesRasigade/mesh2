@@ -43,16 +43,16 @@ mesh
                 if ( size > 1000 ) { size /= 1000; unit = 'Go'; }
                 if ( size > 1000 ) { size /= 1000; unit = 'To'; }
                 
-                text += '<i class="glyphicon glyphicon-hdd"></i>&nbsp;<sub style="font-size: 0.9em">'+Math.floor(size) + '&nbsp;' + unit + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-hdd"></i>&nbsp;'+Math.floor(size) + '&nbsp;' + unit + ' &nbsp; ';
             }
             if ( $scope.statistics[_folder].directories ) {
-                text += '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].directories + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;'+$scope.statistics[_folder].directories + ' &nbsp; ';
             }
             if ( $scope.statistics[_folder].images ) {
-                text += '<i class="glyphicon glyphicon-picture"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].images + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-picture"></i>&nbsp;'+$scope.statistics[_folder].images + ' &nbsp; ';
             }
             if ( $scope.statistics[_folder].videos ) {
-                text += '<i class="glyphicon glyphicon-film"></i>&nbsp;<sub style="font-size: 0.9em">'+$scope.statistics[_folder].videos + '</sub> &nbsp; ';
+                text += '<i class="glyphicon glyphicon-film"></i>&nbsp;'+$scope.statistics[_folder].videos + ' &nbsp; ';
             }
         }
         
@@ -93,8 +93,11 @@ mesh
         url = undefined !== url ? url : '';
         
         var api = 'http://' + ( $scope.server ? $scope.server : window.location.origin ) + ':8080/' + escape( serverKey );
-        if ( mesh._servers && mesh._servers[$scope.server] ) {
-            api = mesh._servers[$scope.server].api;
+        for ( var i in mesh._servers ) {
+            if ( $scope.server === mesh._servers[i].id || $scope === mesh._servers[i].id ) {
+                api = mesh._servers[i].api;
+                break;
+            }
         }
         
         console.log( 87 , api + url );

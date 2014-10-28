@@ -23,6 +23,10 @@ mesh
         controller:'AboutController',
         templateUrl:'partials/about.html'
     })
+    .when('/servers', {
+        controller:'ServersController',
+        templateUrl:'partials/servers.html'
+    })
     .when('/:path*?', {
         controller:'ListController',
         templateUrl:'partials/list.html'
@@ -103,17 +107,6 @@ mesh
     $scope.showImage = '';
     $scope.showVideo = '';
     
-    if ( undefined === mesh._servers ) {
-        mesh._servers = {
-            "local": {
-                "api": "http://localhost:8080/12345"
-            },
-            "19": {
-                "api": "http://rasigade.fr:8080/12345"
-            }
-        }
-    }
-    
     $scope.servers = mesh._servers;
     
     $scope.search = function() {
@@ -129,7 +122,7 @@ mesh
                 $scope.loaded = 0;
                 console.log( 'search for: ' , $scope.s );
                 
-                //$rootScope.s = $scope.s;
+                // $rootScope.s = $scope.s;
                 
                 $scope.load();
             } else {
@@ -141,6 +134,10 @@ mesh
         if ( window.searchTimeout ) clearTimeout(searchTimeout);
         searchTimeout = setTimeout(_search,delay);
       };
+    
+    window.onkeypress = function(event){
+        document.getElementById('s').focus();
+    }
     
     $scope.breadcrumb = function() {
         
@@ -547,6 +544,29 @@ mesh
                 
             });
     }
+}])
+
+.controller('ServersController', ['$scope','$rootScope','$location', function($scope,$rootScope,$location) {
+
+    $scope.servers = $rootScope.servers;
+    
+    if ( undefined === $scope.servers ) {
+        $scope.servers = mesh._servers;
+    }
+    
+    console.log( 568 , $scope.servers );
+    
+    $scope.save = function() {
+        
+        console.log( $scope.servers );
+        
+        
+        $rootScope.servers = mesh._servers = $scope.servers;
+        
+        localStorage.setItem( 'servers' , JSON.stringify( mesh._servers ) );
+        
+    }
+    
 }])
 
 ;

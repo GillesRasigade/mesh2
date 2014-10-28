@@ -14,9 +14,14 @@ mesh
         config.params = config.params ? config.params : {};
         
         var url = 'http://' + ( config.server ? config.server : window.location.origin ) + ':8080/' + escape( serverKey );
-        if ( mesh._servers && mesh._servers[config.server] ) {
-            url = mesh._servers[config.server].api;
+        
+        for ( var i in mesh._servers ) {
+            if ( config.server === mesh._servers[i].id ) {
+                url = mesh._servers[i].api;
+                break;
+            }
         }
+        
         config.url = url + escape( config.url )
         
         config.params.access_token = mesh._auth.access_token;

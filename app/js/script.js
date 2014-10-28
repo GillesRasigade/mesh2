@@ -71,3 +71,15 @@ var signinCallback = function (authResult) {
 mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
 
+mesh._servers = localStorage.getItem('servers');
+
+if ( !mesh._servers ) {
+    mesh._servers = [
+        {
+            "id": "local",
+            "api": "http://localhost:8080/12345"
+        }
+    ]
+} else {
+    mesh._servers = JSON.parse( mesh._servers );
+}
