@@ -9,7 +9,8 @@
     "imagemagick": "0.1.*",
     "googleapis": "1.0.*",
     "memory-cache": "0.0.5",
-    "fluent-ffmpeg": "2.0.*"
+    "fluent-ffmpeg": "2.0.*",
+    "mime": "1.2.*"
   },
   "repository": {
     "type": "git",
