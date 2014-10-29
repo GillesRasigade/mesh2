@@ -150,24 +150,12 @@ mesh
         angular.forEach(p,function(o,i){
             _path += (''==o?'':o+'/');
             
-            if ( ''==o ) {
-                
-                breadcrumb.innerHTML += '\
+            breadcrumb.innerHTML += '\
                 <li class="dropdown '+( i+1 == len ? 'active' : '' )+'">\
                     <a href="#/'+$scope.server+'/'+_path+'">'+
                         (''==o?'<b><i class="glyphicon glyphicon-hdd"></i> <sub>' + $scope.server + '</sub></b>' : o )+
                     '</a>\
                 </li>';
-                
-            } else {
-            
-                breadcrumb.innerHTML += '\
-                <li class="'+( i+1 == len ? 'active' : '' )+'">\
-                    <a href="#/'+$scope.server+'/'+_path+'">'+
-                        (''==o?'<b><i class="glyphicon glyphicon-hdd"></i> <sub>' + $scope.server + '</sub></b>' : o )+
-                    '</a>\
-                </li>';
-            }
         });
         
         // Move the breadcrumb to the right:
@@ -406,16 +394,29 @@ mesh
         console.log( 'reset: ' , path );
     }
     
-    $scope.rename = function( path ) {
+    $scope.star = function ( path , $event ) {
+        var name = path;
+        if ( -1 === name.indexOf('-star.') ) {
+            name = name.replace(/(\.[^\.]+)$/i,'-star$1');
+        } else {
+            name = name.replace(/-star/i,'');
+        }
+        console.log( 'star' , path , name );
+        $event.stopPropagation();
+        
+        $scope.rename( path , name.replace(/^.*\//,'') );
+    }
+    
+    $scope.rename = function( path , name ) {
         console.log( 'rename: ' , path );s
         
-        var name = prompt( path , path.replace(/^.*\//,'') );
+        var name = undefined !== name ? name : prompt( path , path.replace(/^.*\//,'') );
         if ( name ) {
             
             var found = false;
             
             for ( var i in $scope.folders ) {
-                console.log( $scope.folders[i].path , $scope.folders[i].path.match( new RegExp('\/'+name+'$')) )
+                // console.log( $scope.folders[i].path , $scope.folders[i].path.match( new RegExp('\/'+name+'$')) )
                 if ( 'directory' == $scope.folders[i].type && $scope.folders[i].path.match( new RegExp('\/'+name+'$')) ) {
                     found = true;
                     break;
@@ -432,29 +433,33 @@ mesh
                     .rename( path , name , $scope.server )
                     .then(function( data ){
                         
-                        console.log( data );
+                        // console.log( data );
                         
                         //$scope.reload();
                         for ( var i in $scope.folders ) {
-                            if ( 'directory' == $scope.folders[i].type && $scope.folders[i].path === path ) {
+                            if ( $scope.folders[i].path === path ) {
                                 var npath = path.replace( /\/[^\/]+\/?$/ , '/'+name );
                                 console.log( $scope.folders[i] , npath );
                                 
-                                if ( mesh._data[$scope.server+':'+path] ) {
-                                    mesh._data[$scope.server+':'+npath] = mesh._data[$scope.server+':'+path];
-                                    delete mesh._data[$scope.server+':'+path];
-                                }
                                 $scope.folders[i].path = npath;
-                                mesh._data[$scope.server+':'+$scope.path].folders = $scope.folders;
-                                
-                                // Keep statisticsunchanged
-                                if ( mesh._data[$scope.server+':'+$scope.path] ) {
-                                    mesh._data[$scope.server+':'+$scope.path].statistics[npath.replace(/^.*\//,'')] =
-                                        mesh._data[$scope.server+':'+$scope.path].statistics[path.replace(/^.*\//,'')]
+                            
+                                if ( 'directory' == $scope.folders[i].type ) {
+                                    
+                                    if ( mesh._data[$scope.server+':'+path] ) {
+                                        mesh._data[$scope.server+':'+npath] = mesh._data[$scope.server+':'+path];
+                                        delete mesh._data[$scope.server+':'+path];
+                                    }
+                                    mesh._data[$scope.server+':'+$scope.path].folders = $scope.folders;
+                                    
+                                    // Keep statisticsunchanged
+                                    if ( mesh._data[$scope.server+':'+$scope.path] ) {
+                                        mesh._data[$scope.server+':'+$scope.path].statistics[npath.replace(/^.*\//,'')] =
+                                            mesh._data[$scope.server+':'+$scope.path].statistics[path.replace(/^.*\//,'')]
+                                    }
+                                    
                                 }
                                 
                                 $scope.$apply;
-                                
                                 break;
                             }
                         }

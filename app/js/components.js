@@ -9,7 +9,7 @@ angular.module('components', [])
                     mesh._data[scope.server+':'+scope.path].scrollTop = raw.scrollTop;
                 }
                 
-                if (raw.scrollTop + raw.offsetHeight + 3*screen.height/4 >= raw.scrollHeight ) {
+                if (raw.scrollTop + raw.offsetHeight + 4*screen.height/4 >= raw.scrollHeight ) {
                     scope.$apply(attr.whenScrolled);
                 }
             });

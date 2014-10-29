@@ -114,6 +114,7 @@
                     
                         <!--a href="#/{{server}}{{image.path}}"-->
                         <a ng-if="'image'==image.type" href="javascript:void(0);" ng-click="show(image.type,image)">
+                            <span class="star glyphicon {{ 'starred' == (image.path | starred ) ? 'glyphicon-star starred' : 'glyphicon-star-empty' }}" ng-click="star(image.path,$event)"></span>
                             <div ng-if="$index == 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:1000:1000 | server:this }}');"></div>
                             <div ng-if="$index != 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:500:500 | server:this }}');"></div>
                         </a>

@@ -100,8 +100,6 @@ mesh
             }
         }
         
-        console.log( 87 , api + url );
-        
         return api + url;
         
     };
@@ -123,4 +121,10 @@ mesh
         }
         return text;
     };
+})
+
+.filter('starred', function(){
+    return function(path){
+        return path.match('-star.') ? 'starred' : '';
+    }
 })

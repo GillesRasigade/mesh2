@@ -712,9 +712,11 @@ server.get(commandRegEx, function (req, res, next) {
      	        
      	        // Image on fly resize:
      	        var _config = {
-                    format: extension,
+                    format: extension.toLowerCase(),
                     progressive: true
                 }
+                
+                console.log( 719 , _config );
      	        
      	        // Image manipulation parameters:
      	        if ( req.params.w ) _config.width = req.params.w;
@@ -736,7 +738,7 @@ server.get(commandRegEx, function (req, res, next) {
      	            } else {
      	                
      	                im.readMetadata( path , function(err, metadata){
-     	                    //console.log( 490 , arguments );
+     	                  //  console.log( 490 , arguments );
      	                    
      	                    // Read the metadata for image orientation:
      	                    var rotate = 0;
@@ -756,9 +758,14 @@ server.get(commandRegEx, function (req, res, next) {
      	                
          	                // Read the image file:
          	                _config.srcData = fs.readFileSync(path);
-         	        
+         	                
                  	        im.resize( _config, function(err, stdout, stderr){
-                                if (err) throw err
+                 	            if ( err ) {
+                 	                // Output the resized image:
+                                    res.writeHead(200, {'Content-Type': 'image/' + extension.toLowerCase() });
+                                    res.end(fs.readFileSync(tmp), 'binary');
+                                    return;
+                 	            }
                               
                                 // Create the tmp directory if not exist:
                                 var tmpDir = p.dirname(tmp);
@@ -1030,8 +1037,9 @@ server.put(commandRegEx, function (req, res, next) {
                 fs.rename(path,base_path + "/" + req.params.name, function () {
                     resSuccess(null, res);
                     
-                    var tmp = config.tmp + '/' + req.params[2];
-                    fs.rename(tmp,config.tmp + '/' + req.params.name, function () {
+                    var tmp = config.tmp + '/' + decodeURIComponent( unescape( req.params[2] ));
+                    // console.log('rename',tmp,tmp.replace(/[^\/]+$/,'') + '/' + req.params.name);
+                    fs.rename(tmp,tmp.replace(/[^\/]+$/,'') + '/' + req.params.name, function () {
                     });
                     
                     
