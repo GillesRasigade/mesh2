@@ -305,6 +305,9 @@ body {
 .directory-inner:hover {
     text-decoration: none;
 }
+.directory.dragover .directory-inner {
+    border-color: blue;
+}
 
 .directory:hover .directory-thumb {
     opacity: 0.9;

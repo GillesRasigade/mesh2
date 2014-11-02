@@ -282,37 +282,88 @@ mesh
     processDragOverOrEnter = function(event) {
           if (event != null) {
             event.preventDefault();
+            event.stopPropagation();
+            
+            // Remove previous dragover classes:
+            angular.forEach( angular.element( document.getElementsByClassName('dragover') ) , function(o){
+                angular.element(o).removeClass('dragover');
+            });
             
             var element = angular.element( event.target );
-            element.addClass('dragover');//.html('<i class="glyphicon glyphicon-cloud-upload"></i>')
-            
+            // element.addClass('dragover');//.html('<i class="glyphicon glyphicon-cloud-upload"></i>')
+            console.log( 290 , element , element.parent().parent().parent().hasClass( 'directory-inner' ) );
+            switch ( true ) {
+                case true == element.parent().parent().parent().parent().parent().hasClass( 'directory' ):
+                    element = element.parent();
+                case true == element.parent().parent().parent().parent().hasClass( 'directory' ):
+                    element = element.parent();
+                case true == element.parent().parent().parent().hasClass( 'directory' ):
+                    element = element.parent();
+                case true == element.parent().parent().hasClass( 'directory' ):
+                    element = element.parent();
+                case true == element.parent().hasClass( 'directory' ):
+                    element = element.parent();
+                    
+                case 'add-files' === element.attr('id'):
+                    if ( !element.hasClass('dragover') ) {
+                        element.addClass('dragover');
+                    }
+                    break;
+            }
           }
           
           event.dataTransfer.effectAllowed = 'copy';
           return false;
         };
     
-    var element = angular.element( document.getElementById('add-files') );
+    // var element = angular.element( document.getElementById('add-files') );
+    var element = angular.element( window );
     element.bind('dragover', processDragOverOrEnter);
     element.bind('dragenter', processDragOverOrEnter);
-    element.bind('dragleave', function(event){
-        if ( event ) {
-            var element = angular.element( event.target );
-            element.removeClass('dragover');
-        }
-    });
+    // element.bind('dragleave', function(event){
+    //     if ( event ) {
+    //         var element = angular.element( event.target );
+    //         switch ( true ) {
+    //             case true == element.parent().parent().parent().parent().hasClass( 'dragover' ):
+    //                 element = element.parent().parent().parent().parent();
+    //             case true == element.parent().parent().parent().hasClass( 'dragover' ):
+    //                 element = element.parent().parent().parent();
+    //             case true == element.parent().parent().hasClass( 'dragover' ):
+    //                 element = element.parent().parent();
+    //             case true == element.parent().hasClass( 'dragover' ):
+    //                 element = element.parent();
+    //             case 'add-files' === element.attr('id'):
+    //                 element.removeClass('dragover');
+    //                 break;
+    //         }
+    //     }
+    // });
     element.bind('drop', function(event) {
         if (event != null) {
             event.preventDefault();
-            var element = angular.element( event.target );
-            element.removeClass('dragover');
         }
-        meshio.upload( $scope.path , event.dataTransfer.files , $scope.server , function(){
-            
-            $scope.reload();
-            
+        
+        // Remove previous dragover classes:
+        var id = '';
+        angular.forEach( angular.element( document.getElementsByClassName('dragover') ) , function(o){
+            id = angular.element(o).attr('id');
+            angular.element(o).removeClass('dragover');
         });
         
+        if ( id ) {
+            var path = $scope.path;
+            console.log( id , angular.element( event.target ) , $scope.path , event.dataTransfer.files , $scope.server )
+            angular.forEach( $scope.folders , function ( o , i ) {
+                if ( o.$$hashKey == id ) {
+                    console.log( i , o );
+                    path = o.path;
+                }
+            })
+            meshio.upload( path , event.dataTransfer.files , $scope.server , function(){
+                delete mesh._data[$scope.server+':'+path];
+                $scope.reload();
+            });
+        }
         return false;
     });
     
