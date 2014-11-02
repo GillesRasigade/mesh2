@@ -391,6 +391,12 @@ body {
 
 .image .actions-menu:hover .dropdown-menu,
 .image .dropdown-menu {
+    
+    
+    /*-webkit-transition-delay: 1s;*/
+    /*transition-delay: 1s;*/
+    /*transition: display ease-in-out 0.1s;*/
+    
     top: -45px;
 }
 
@@ -409,10 +415,12 @@ body {
     float: right;
     margin: 0 0 -100% 0;
     z-index: 999;
-    color: #ee0;
-    font-size: 1.8em;
+    color: #fff;
+    /*-webkit-text-stroke-width: 1px;*/
+    /*-webkit-text-stroke-color: #eee;*/
+    font-size: 1.3em;
     display: none;
-    padding: 0.25em;
+    padding: 0.25em 0.25em 1em 1em;
     text-shadow: 0px 0px 5px #444s;
 }
 

@@ -244,8 +244,11 @@ mesh
         fd.append('file', files[index]);
         
         var url = 'http://' + ( server ? server : window.location.origin ) + ':8080/' + escape( serverKey );
-        if ( mesh._servers && mesh._servers[server] ) {
-            url = mesh._servers[server].api;
+        for ( var i in mesh._servers ) {
+            if ( server === mesh._servers[i].id ) {
+                url = mesh._servers[i].api;
+                break;
+            }
         }
         
         var xhr = new XMLHttpRequest();

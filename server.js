@@ -1040,6 +1040,7 @@ server.put(commandRegEx, function (req, res, next) {
                     var tmp = config.tmp + '/' + decodeURIComponent( unescape( req.params[2] ));
                     // console.log('rename',tmp,tmp.replace(/[^\/]+$/,'') + '/' + req.params.name);
                     fs.rename(tmp,tmp.replace(/[^\/]+$/,'') + '/' + req.params.name, function () {
+                        
                     });
                     
                     
