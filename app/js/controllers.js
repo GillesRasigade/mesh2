@@ -212,7 +212,7 @@ mesh
                 
                 setTimeout(function(){
                     document.getElementById('list').scrollTop = $scope.scrollTop;
-                },5);
+                },50);
                 
                 
                 //console.log( 176 , 'Load from memory' , $scope.scrollTop , $scope );
@@ -291,7 +291,7 @@ mesh
             
             var element = angular.element( event.target );
             // element.addClass('dragover');//.html('<i class="glyphicon glyphicon-cloud-upload"></i>')
-            console.log( 290 , element , element.parent().parent().parent().hasClass( 'directory-inner' ) );
+            // console.log( 290 , element , element.parent().parent().parent().hasClass( 'directory-inner' ) );
             switch ( true ) {
                 case true == element.parent().parent().parent().parent().parent().hasClass( 'directory' ):
                     element = element.parent();
@@ -359,6 +359,7 @@ mesh
                     path = o.path;
                 }
             })
+            console.log( 362 , $scope.server , path );
             meshio.upload( path , event.dataTransfer.files , $scope.server , function(){
                 delete mesh._data[$scope.server+':'+path];
                 $scope.reload();
@@ -456,6 +457,17 @@ mesh
         $event.stopPropagation();
         
         $scope.rename( path , name.replace(/^.*\//,'') );
+    }
+    
+    
+    $scope.cover = function ( path , target ) {
+        target = undefined !== target ? target : prompt( 'Set cover for directory:' , path.replace(/\/[^\/]*$/,'') );
+        console.log( 'cover' , target );
+        meshio
+            .cover( path , target , $scope.server )
+            .then(function( data ){
+                console.log( 469 , 'cover set' );
+            });
     }
     
     $scope.rename = function( path , name ) {

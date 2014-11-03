@@ -592,17 +592,42 @@ server.get(commandRegEx, function (req, res, next) {
                             console.error( '387 - Error reading: ' , path , err );
                         } else {
                             
-                            //console.log( files );
-                            
+                            // console.log( files ); return;
                             for (var i=0, z=files.length-1; i<=z; i++) {
-                                if ( files[i].match( new RegExp( config.types.image , 'i' ) ) ) {
-                                    var url = '/' + req.params[0] + '/image/' + ( escape( path.replace(config.base,'') + '/' +files[i] )) + '?w=300&h=300&access_token='+req.query['access_token'];
-                                    //console.log( 'URL:' , encodeURI( url ) , files[i] ,config.base );
+                                if ( files[i].match(/\.cover/) ) {
+                                    console.log('read from .cover');
+                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(config.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
+                                    
                                     res.writeHead(302, {
                                       'Location': url,
                                       'Content-Type': 'charset=utf-8'
                                     });
+                                    
                                     return res.end();
+                                }
+                            }
+                            
+                            for (var i=0, z=files.length-1; i<=z; i++) {
+                                if ( files[i].match( new RegExp( config.types.image , 'i' ) ) ) {
+                                    
+                                    // Copy the file to the directory temporary folder:
+                                    var absolute = decodeURIComponent( escape( path.replace(config.base,'') + '/' +files[i] ) );
+                                    var cover = absolute.replace(/\/[^\/]*(\.[^\.]+)$/,'/.cover$1');
+                                        
+                                    fs.copy(config.base+absolute, config.base+cover, function(err){
+                                        if (err) throw err;
+                                        
+                                        var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=300&h=300&access_token='+req.query['access_token'];
+                                        //console.log( 'URL:' , encodeURI( url ) , files[i] ,config.base );
+                                        res.writeHead(302, {
+                                          'Location': url,
+                                          'Content-Type': 'charset=utf-8'
+                                        });
+                                        
+                                        return res.end();
+                                    });
+                                    
+                                    return true;
                                     //return  resSuccess(files[i], res);
                                 }
                             }
@@ -1104,6 +1129,23 @@ server.put(commandRegEx, function (req, res, next) {
                 
                 break;
             
+            case "cover":
+                // Make sure it exists
+                if (fs.existsSync(path) && fs.existsSync(config.base +'/'+req.params.target) ) {
+                    var cover = req.params.target + '/' + decodeURIComponent( unescape( path.replace(/^.*\/[^\/]*(\.[^\.]+)$/,'.cover$1')));
+                    
+                    
+                    console.log( 'cover copy' , path , cover );
+                    
+                    fs.copy( path, config.base+'/'+cover, function(err){
+                        if(err)throw err;
+                        console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ ') );
+                        var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ '),function (err, stdout, stderr) {});
+                        
+                        resSuccess(null, res);
+                    });
+                }
+                break;
                 
             default:
                 // Unknown command

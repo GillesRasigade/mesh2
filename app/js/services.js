@@ -161,6 +161,25 @@ mesh
         }));
     }
     
+    this.cover = function ( path , target , server ) {
+        
+        path = undefined !== path ? path : '';
+        server = undefined !== server ? server : 'localhost';
+        
+        if ( target ) {
+            var params = {
+                target: target
+            }
+     
+            return ( this.request({
+                server: server,
+                method: "put",
+                url: '/cover/' + path,
+                params: params
+            }));
+        }
+    }
+    
     this.rename = function ( path , name , server ) {
  
         path = undefined !== path ? path : '';
