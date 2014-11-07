@@ -576,7 +576,7 @@ server.get(commandRegEx, function (req, res, next) {
                 
                 var searchThumb = function ( path , level , callback ) {
                     
-                    //console.log( 365 , path , level );
+                    // console.log( 365 , path , level );
                     
                     if ( level > 5 ) {
                         //resSuccess({}, res);
@@ -594,6 +594,7 @@ server.get(commandRegEx, function (req, res, next) {
                             
                             // console.log( files ); return;
                             for (var i=0, z=files.length-1; i<=z; i++) {
+                                // console.log( files[i] , files[i].match(/\.cover/) );
                                 if ( files[i].match(/\.cover/) ) {
                                     console.log('read from .cover');
                                     var url = '/' + req.params[0] + '/image/' + escape( path.replace(config.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
@@ -608,17 +609,22 @@ server.get(commandRegEx, function (req, res, next) {
                             }
                             
                             for (var i=0, z=files.length-1; i<=z; i++) {
+                                console.log( 612 , files[i] , files[i].match( new RegExp( config.types.image , 'i' ) ) );
                                 if ( files[i].match( new RegExp( config.types.image , 'i' ) ) ) {
                                     
+                                    // console.log( 614 , path.replace(config.base,'') + '/' +files[i] );
                                     // Copy the file to the directory temporary folder:
-                                    var absolute = decodeURIComponent( escape( path.replace(config.base,'') + '/' +files[i] ) );
+                                    var absolute = path.replace(config.base,'') + '/' +files[i];
                                     var cover = absolute.replace(/\/[^\/]*(\.[^\.]+)$/,'/.cover$1');
+ 
+                                    // console.log( 619 , config.base+absolute, config.base+cover );
                                         
                                     fs.copy(config.base+absolute, config.base+cover, function(err){
                                         if (err) throw err;
                                         
                                         var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=300&h=300&access_token='+req.query['access_token'];
-                                        //console.log( 'URL:' , encodeURI( url ) , files[i] ,config.base );
+                                        
+                                        // console.log( 'URL:' , encodeURI( url ) , files[i] ,config.base );
                                         res.writeHead(302, {
                                           'Location': url,
                                           'Content-Type': 'charset=utf-8'
