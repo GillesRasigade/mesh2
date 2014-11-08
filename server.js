@@ -143,7 +143,8 @@ var checkToken = function ( req, callback , error ) {
         }
         
         var tokeninfo = cache.get('access_token:' + req.params.access_token);
-        if ( true || tokeninfo.removeAddress === req.connection.remoteAddress ) {
+        console.log( 146 , tokeninfo );
+        if ( tokeninfo && tokeninfo.removeAddress === req.connection.remoteAddress ) {
             return _continue();
             
         } else {
@@ -168,7 +169,12 @@ var checkToken = function ( req, callback , error ) {
                                     remoteAddress: req.connection.remoteAddress
                                 };
                                 
+                                console.log( 'cache put: ' + req.params.access_token , tokeninfo )
                                 cache.put( 'access_token:' + req.params.access_token , tokeninfo , json.expires_in*1000 )
+                                
+                                console.log( 'cache get: ' , cache.get('access_token:' + req.params.access_token) )
+                                
+                                
                                 return _continue();
                             }
                             
