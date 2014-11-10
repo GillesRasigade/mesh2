@@ -318,8 +318,8 @@ mesh
     
     // var element = angular.element( document.getElementById('add-files') );
     var element = angular.element( window );
-    element.bind('dragover', processDragOverOrEnter);
-    element.bind('dragenter', processDragOverOrEnter);
+    element.off('dragover').on('dragover', processDragOverOrEnter);
+    element.off('dragenter').on('dragenter', processDragOverOrEnter);
     // element.bind('dragleave', function(event){
     //     if ( event ) {
     //         var element = angular.element( event.target );
@@ -338,7 +338,7 @@ mesh
     //         }
     //     }
     // });
-    element.bind('drop', function(event) {
+    element.off('drop').on('drop', function(event) {
         if (event != null) {
             event.preventDefault();
         }
@@ -359,7 +359,7 @@ mesh
                     path = o.path;
                 }
             })
-            console.log( 362 , $scope.server , path );
+            console.log( 362 , $scope.server , path , $scope.path );
             meshio.upload( path , event.dataTransfer.files , $scope.server , function(){
                 delete mesh._data[$scope.server+':'+path];
                 $scope.reload();
@@ -545,12 +545,13 @@ mesh
                     for ( var i in $scope.folders ) {
                         if ( $scope.folders[i].path === path ) {
                             console.log( $scope.folders[i] );
-                            delete $scope.folders[i];
                             
                             if ( 'directory' == $scope.folders[i].type ) {
                                 delete mesh._data[$scope.server+':'+path];
                                 mesh._data[$scope.server+':'+$scope.path].folders = $scope.folders;
                             }
+                            
+                            delete $scope.folders[i];
                             
                             $scope.loaded--;
                             $scope.total--;
