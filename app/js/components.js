@@ -3,13 +3,14 @@ angular.module('components', [])
     .directive('whenScrolled', function() {
         return function(scope, elm, attr) {
             var raw = elm[0];
-            elm.bind('scroll', function() {
+            elm.off('scroll').on('scroll', function() {
                 
                 if ( mesh._data && mesh._data[scope.server+':'+scope.path] ) {
                     mesh._data[scope.server+':'+scope.path].scrollTop = raw.scrollTop;
                 }
                 
-                if (raw.scrollTop + raw.offsetHeight + 4*screen.height/4 >= raw.scrollHeight ) {
+                if ( !scope.busy && raw.scrollTop + raw.offsetHeight + 4*screen.height/4 >= raw.scrollHeight ) {
+                    console.log('scroll!');
                     scope.$apply(attr.whenScrolled);
                 }
             });

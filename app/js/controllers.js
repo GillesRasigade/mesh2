@@ -184,6 +184,8 @@ mesh
         if ( $scope.busy ) return;
         $scope.busy = true;
         
+        // console.log( 187 , onScroll , $scope.total , $scope.loaded , $scope.folders.length );
+        
         if ( $scope.total == -1 || $scope.loaded < $scope.total ) {
         
             if ( !onScroll ) {
@@ -227,12 +229,14 @@ mesh
                     .directory( $scope.path , $scope.loaded , $scope.limit , $scope.server , $scope.s )
                     .then(function( data ){
                         
+                        console.log( 232 , data.list );
+                        
                         $scope.folders = undefined !== $scope.folders ? $scope.folders : [];
                         
                         $scope.data = data;
                         $scope.folders = $scope.folders.concat( data.list );
                         
-                        $scope.loaded += $scope.folders.length;
+                        $scope.loaded = $scope.folders.length;
                         $scope.total = data.total;
                         
                         //console.log( 95 , $scope.folders );
