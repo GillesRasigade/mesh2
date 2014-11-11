@@ -229,7 +229,7 @@ mesh
                     .directory( $scope.path , $scope.loaded , $scope.limit , $scope.server , $scope.s )
                     .then(function( data ){
                         
-                        console.log( 232 , data.list );
+                        // console.log( 232 , data.list );
                         
                         $scope.folders = undefined !== $scope.folders ? $scope.folders : [];
                         
