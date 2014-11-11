@@ -11,10 +11,10 @@
     
     <div ng-repeat="(i,server) in servers track by $index" class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
     
-        <div class="directory-inner thumbnail" title="{{folder.path | rm:path }}">
-            <a href="#/{{ server.id }}">
+        <div class="directory-inner thumbnail" title="{{ folder.path | rm:path }}">
+            <a href="#/{{ server.id }}/{{ server.base ? server.base : '' }}">
                 <div class="directory-thumb-background">
-                    <div class="directory-thumb" style="background-image: url('{{ '' | thumb:500:500 | server:server.id }}');"></div>
+                    <div class="directory-thumb" style="background-image: url('{{ '/' + (server.base ? server.base : '') | thumb:500:500 | server:server.id }}');"></div>
                 </div>
                 <!--<i class="glyphicon glyphicon-exclamation-sign"></i>-->
             </a>
@@ -23,6 +23,8 @@
                 <input type="text" placeholder="HDD name" class="form-control" id="server-{{ i }}-id" ng-model="server.id" value="{{ server.id }}"/>
             
                 <input type="text" placeholder="Mesh² API: http://media.myserver.io" class="form-control" id="server-{{ i }}-api" ng-model="server.api" value="{{ server.api }}"/>
+                
+                <input type="text" placeholder="Mesh² base: /photos" class="form-control" id="server-{{ i }}-base" ng-model="server.base" value="{{ server.base }}"/>
                 
                 <button type="button" class="btn btn-link" ng-click="servers.splice(i,1);">Delete</button>
                 
