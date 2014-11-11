@@ -49,8 +49,14 @@ var signinCallback = function (authResult) {
                 
             });
         });
-    
-        window.location.hash = '#/';
+        
+        // redirect to the last opened folder or servers list:
+        if ( localStorage.getItem( 'route' ) ) {
+            window.location.hash = localStorage.getItem( 'route' );
+        } else {
+            window.location.hash = '#/servers';
+        }
+        
     },250);
     
     
@@ -72,14 +78,18 @@ mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
 
 mesh._servers = localStorage.getItem('servers');
-
 if ( !mesh._servers ) {
-    mesh._servers = [
-        {
-            "id": "local",
-            "api": "http://localhost:8080/12345"
-        }
-    ]
+    mesh._servers = null;
+    // mesh._servers = [
+    //     {
+    //         "id": "local",
+    //         "api": "http://localhost:8080/12345"
+    //     }
+    // ]
 } else {
     mesh._servers = JSON.parse( mesh._servers );
+}
+
+if ( localStorage.getItem( 'route' ) ) {
+    window.location.hash = localStorage.getItem( 'route' );
 }

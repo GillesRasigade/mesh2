@@ -5,6 +5,12 @@ mesh
 // - http://viralpatel.net/blogs/angularjs-service-factory-tutorial/
 .service('meshio', function( $http, $q ) {
     
+    this.checkAuth = function () {
+        return mesh._auth
+            && mesh._auth.expires_at
+            && 0 < parseInt(mesh._auth.expires_at,10)-(new Date()).getTime()/1000;
+    }
+    
     this.url = function ( config ) {
         
         var url = 'http://' + ( config.server ? config.server : window.location.origin ) + ':8080/' + escape( serverKey );
@@ -82,6 +88,16 @@ mesh
             
         }) );
 
+    }
+    
+    this.servers = function ( server ) {
+        server = undefined !== server ? server : 'localhost';
+        
+        return ( this.request({
+            server: server,
+            method: "get",
+            url: '/servers/'
+        }));
     }
     
     this.directory = function ( path , offset , limit , server , search ) {

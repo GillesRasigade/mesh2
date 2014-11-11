@@ -108,7 +108,7 @@ mesh
 .filter('rm', function() {
     return function(text,path) {
         path = undefined !== path ? path : '';
-        text = text.replace( new RegExp('^/?'+path+'/?') , '' );
+        text = undefined !== text ? text.replace( new RegExp('^/?'+path+'/?') , '' ) : '';
         text = '' == text ? '&nbsp;' : text;
         return text;
     };

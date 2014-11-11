@@ -69,20 +69,21 @@ mesh
     if ( window.gapi ) gapi.signin.go('signinButton')
     
 }])
-.controller('ListController', ['$scope','$location','$route','meshio', function($scope,$location,$route,meshio) {
+// .controller('ListController', ['$scope','$location','$route','meshio', function($scope,$location,$route,meshio) {
     
-    // Require the user to be logged in:
-    if ( undefined === mesh._auth ) $location.path('/logout');
+//     // Require the user to be logged in:
+//     if ( undefined === mesh._auth ) $location.path('/logout');
     
-    // Application path definition:
-    var path = $scope.path = '/' + $route.current.params.path ? $route.current.params.path : '';
+//     // Application path definition:
+//     var path = $scope.path = '/' + $route.current.params.path ? $route.current.params.path : '';
     
     
-}])
+// }])
 .controller('ListController', ['$scope','$rootScope','$filter','$location','$route','meshio', function($scope,$rootScope,$filter,$location,$route,meshio) {
     
     // Require the user to be logged in:
-    if ( undefined === mesh._auth ) $location.path('/logout');
+    // if ( undefined === mesh._auth ) $location.path('/logout');
+    if ( !meshio.checkAuth() ) return $location.path('/logout');
     
     // Application path definition:
     var path = '/';
@@ -108,6 +109,9 @@ mesh
     $scope.showVideo = '';
     
     $scope.servers = mesh._servers;
+    
+    
+    localStorage.setItem( 'route' , $route.current.params.path );
     
     $scope.search = function() {
         var delay = 500;
@@ -232,9 +236,11 @@ mesh
                         $scope.total = data.total;
                         
                         //console.log( 95 , $scope.folders );
-                        
-                        var _class = document.getElementById('files-list').getAttribute('class') + ''
-                        document.getElementById('files-list').setAttribute('class',_class.replace(/ ?fadeout/,'') );
+                        var $list = document.getElementById('files-list');
+                        if ( $list ) {
+                            var _class = $list.getAttribute('class') + ''
+                            $list.setAttribute('class',_class.replace(/ ?fadeout/,'') );
+                        }
                         
                         if ( !$scope.s ) {
                             if ( !mesh._data ) mesh._data = {};
@@ -249,7 +255,7 @@ mesh
                         $scope.busy = false;
                         
                         if ( onScroll ) {
-                            $scope.$apply();
+                            try{ $scope.$digest(); } catch(e){}
                             
                         } else {
                             
@@ -631,11 +637,28 @@ mesh
     }
 }])
 
-.controller('ServersController', ['$scope','$rootScope','$location', function($scope,$rootScope,$location) {
+.controller('ServersController', ['$scope','$rootScope','$location','meshio', function($scope,$rootScope,$location,meshio) {
+
+    if ( !meshio.checkAuth() ) return $location.path('/logout');
 
     $scope.servers = $rootScope.servers;
     
-    if ( undefined === $scope.servers ) {
+    if ( undefined === $scope.servers && !mesh._servers ) {
+        
+        meshio
+            .servers( $scope.server )
+            .then(function( data ){
+                
+                console.log( 'servers' , data );
+                
+                $scope.servers = data;
+                try{ $scope.$digest(); } catch(e){}
+                
+                $scope.save();
+                
+            });
+        
+    } else {
         $scope.servers = mesh._servers;
     }
     
@@ -644,7 +667,6 @@ mesh
     $scope.save = function() {
         
         console.log( $scope.servers );
-        
         
         $rootScope.servers = mesh._servers = $scope.servers;
         

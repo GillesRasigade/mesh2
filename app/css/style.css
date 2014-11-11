@@ -322,10 +322,21 @@ body {
 }
 
 .directory-thumb {
+    position: relative;
     padding-bottom: 80%;
     background-size: cover;
     background-position: center center;
     background-color: #fff;
+}
+
+.directory-inner.thumbnail .glyphicon-exclamation-sign {
+    font-size: 5em;
+    position: absolute;
+    top: 21%;
+    width: 100%;
+    text-align: center;
+    color: rgba(0,0,0,0.2);
+    z-index: 0;
 }
 
 .list-view {

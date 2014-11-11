@@ -389,7 +389,15 @@ server.get(commandRegEx, function (req, res, next) {
         
         //console.log( 295 , path );
         
+        // console.log( req.params[1] );
+        
         switch (req.params[1]) {
+            
+            case 'servers':
+                // Send output
+                resSuccess(config.servers, res);
+                break;
+            
             // List contents of directory
             case "_dir":
                 fs.readdir(path, function (err, files) {
