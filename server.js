@@ -808,7 +808,7 @@ server.get(commandRegEx, function (req, res, next) {
                  	            if ( err ) {
                  	                // Output the resized image:
                                     res.writeHead(200, {'Content-Type': 'image/' + extension.toLowerCase() });
-                                    res.end(fs.readFileSync(tmp), 'binary');
+                                    res.end(fs.readFileSync(path), 'binary');
                                     return;
                  	            }
                               
