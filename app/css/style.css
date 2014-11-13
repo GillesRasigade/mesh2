@@ -1,10 +1,12 @@
 
-@import '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
+/*@import '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';*/
 
 /*@import '/fsapi/app/lib/bootstrap/bootstrap.min.css';*/
 
 body {
   background-color: #eee;
+  -webkit-app-region: drag;
+  -webkit-transform: translateZ(0);
 }
 
 #signin {

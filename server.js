@@ -143,7 +143,7 @@ var checkToken = function ( req, callback , error ) {
         }
         
         var tokeninfo = cache.get('access_token:' + req.params.access_token);
-        console.log( 146 , tokeninfo );
+        //console.log( 146 , tokeninfo );
         if ( tokeninfo && tokeninfo.removeAddress === req.connection.remoteAddress ) {
             return _continue();
             
@@ -158,7 +158,7 @@ var checkToken = function ( req, callback , error ) {
                     res.on('data', function(d) {
                         var json = JSON.parse( d.toString() );
                         
-                        console.log( 162 , json );
+                        //console.log( 162 , json );
                         
                         if ( -1 !== Object.keys(config.users).indexOf(json.email) ) {
                         
@@ -169,10 +169,10 @@ var checkToken = function ( req, callback , error ) {
                                     remoteAddress: req.connection.remoteAddress
                                 };
                                 
-                                console.log( 'cache put: ' + req.params.access_token , tokeninfo )
+                                //console.log( 'cache put: ' + req.params.access_token , tokeninfo )
                                 cache.put( 'access_token:' + req.params.access_token , tokeninfo , json.expires_in*1000 )
                                 
-                                console.log( 'cache get: ' , cache.get('access_token:' + req.params.access_token) )
+                                //console.log( 'cache get: ' , cache.get('access_token:' + req.params.access_token) )
                                 
                                 
                                 return _continue();
@@ -508,7 +508,7 @@ server.get(commandRegEx, function (req, res, next) {
                 
                 }
                 
-                console.log( 500 , 'Command for dir: ' , cmd );
+                //console.log( 500 , 'Command for dir: ' , cmd );
                 var child = exec(cmd,function (err, stdout, stderr) {
                     if (err) throw err;
                     var files = stdout.split("\n");
@@ -623,7 +623,7 @@ server.get(commandRegEx, function (req, res, next) {
                             }
                             
                             for (var i=0, z=files.length-1; i<=z; i++) {
-                                console.log( 612 , files[i] , files[i].match( new RegExp( config.types.image , 'i' ) ) );
+                                //console.log( 612 , files[i] , files[i].match( new RegExp( config.types.image , 'i' ) ) );
                                 if ( files[i].match( new RegExp( config.types.image , 'i' ) ) ) {
                                     
                                     // console.log( 614 , path.replace(config.base,'') + '/' +files[i] );
@@ -715,7 +715,7 @@ server.get(commandRegEx, function (req, res, next) {
          	        var dirname = p.dirname(path);
          	        var mimetype = mime.lookup(path);
                     
-                    console.log( extension , basename , dirname , mimetype );
+                    //console.log( extension , basename , dirname , mimetype );
                     
                     res.setHeader('Content-disposition', 'attachment; filename=' + basename);
                     res.setHeader('Content-type', mimetype);
@@ -761,7 +761,7 @@ server.get(commandRegEx, function (req, res, next) {
                     progressive: true
                 }
                 
-                console.log( 719 , _config );
+                //console.log( 719 , _config );
      	        
      	        // Image manipulation parameters:
      	        if ( req.params.w ) _config.width = req.params.w;
@@ -783,7 +783,7 @@ server.get(commandRegEx, function (req, res, next) {
      	            } else {
      	                
      	                im.readMetadata( path , function(err, metadata){
-     	                  //  console.log( 490 , arguments );
+     	                  //  //console.log( 490 , arguments );
      	                    
      	                    // Read the metadata for image orientation:
      	                    var rotate = 0;
@@ -848,7 +848,7 @@ server.get(commandRegEx, function (req, res, next) {
                 
             case 'video':
                 
-                console.log('streaming video...' , path );
+                //console.log('streaming video...' , path );
                 if (fs.existsSync(path)) {
                     
                     var output = function( path ) {
@@ -892,7 +892,7 @@ server.get(commandRegEx, function (req, res, next) {
                         
                             var cmd = 'ffmpeg -y -i "'+path+'" "'+tmp+'"';
                             
-                            console.log( 759 , path , tmp , cmd );
+                            //console.log( 759 , path , tmp , cmd );
                             
                             // Create the tmp directory if not exist:
                             var tmpDir = p.dirname(tmp);
@@ -1013,7 +1013,7 @@ server.post(commandRegEx, function (req, res, next) {
                 
                 console.log('Upload file: ');
                 
-                console.log( path , req.files.file )
+                //console.log( path , req.files.file )
                 var file = req.files.file;
                 
                 // Move the tmp file to the correctdirectory:
@@ -1141,7 +1141,7 @@ server.put(commandRegEx, function (req, res, next) {
                         
                         // Remove the image cache versions
                         var cmd = 'rm -f ' + tmp.replace(/ /g,'\\ ') + '*;'
-                        console.log( cmd );
+                        //console.log( cmd );
                         var child = exec(cmd,function (err, stdout, stderr) {});
                         
                     });
@@ -1155,11 +1155,11 @@ server.put(commandRegEx, function (req, res, next) {
                     var cover = req.params.target + '/' + decodeURIComponent( unescape( path.replace(/^.*\/[^\/]*(\.[^\.]+)$/,'.cover$1')));
                     
                     
-                    console.log( 'cover copy' , path , cover );
+                    //console.log( 'cover copy' , path , cover );
                     
                     fs.copy( path, config.base+'/'+cover, function(err){
                         if(err)throw err;
-                        console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ ') );
+                        //console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ ') );
                         var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ '),function (err, stdout, stderr) {});
                         
                         resSuccess(null, res);

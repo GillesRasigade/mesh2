@@ -10,7 +10,7 @@
     },
     "app": {
         "urls": [
-            "http://rasigade.fr/mesh2/index.html"
+            "http://rasigade.fr/mesh2/index.html#/login"
         ],
         "launch": {
             "web_url": "http://rasigade.fr/mesh2/index.html#/"

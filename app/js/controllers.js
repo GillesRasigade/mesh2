@@ -650,7 +650,7 @@ mesh
     if ( undefined === $scope.servers && !mesh._servers ) {
         
         meshio
-            .servers( $scope.server )
+            .servers( 'rasigade.fr' )
             .then(function( data ){
                 
                 console.log( 'servers' , data );
