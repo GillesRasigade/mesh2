@@ -65,7 +65,7 @@
                         <div class="directory-inner thumbnail" title="{{folder.path | rm:path }}">
                             <!--img ng-src="{{ folder.path | thumb }}"-->
                             <div class="directory-thumb-background">
-                                <div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}');"></div>
+                                <div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}{{ folder._r ? '&_=' + folder._r : '' }}');"></div>
                             </div>
                             <div class="caption">
                                 <div class="actions-menu">

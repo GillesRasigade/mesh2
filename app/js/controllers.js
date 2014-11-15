@@ -476,7 +476,22 @@ mesh
         meshio
             .cover( path , target , $scope.server )
             .then(function( data ){
-                console.log( 469 , 'cover set' );
+                
+                var parent = target.replace(/\/[^\/]+$/,'/');
+                console.log( 469 , 'cover set' , $scope.server+':'+parent );
+                if ( mesh._data[$scope.server+':'+parent] ) {
+                    var data = mesh._data[$scope.server+':'+parent];
+                    for ( var i in data.folders ) {
+                        console.log( 485 , data.folders[i].path , target );
+                        if ( data.folders[i].path == target ) {
+                            data.folders[i]._r = (new Date).getTime();
+                            break;
+                        }
+                    }
+                }
+                
+                try{ $scope.$digest(); } catch(e){}
+                
             });
     }
     
