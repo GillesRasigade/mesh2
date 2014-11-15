@@ -58,16 +58,27 @@ mesh
     document.getElementById('signin').innerHTML = '<signin></signin>';
     
     // Action on google api:
-    if ( window.gapi ) gapi.auth.signOut();
+    if ( window.gapi ) {
+        if ( gapi.auth ) {
+            gapi.auth.signOut();
+        }
+        
+        setTimeout(function(){
+            gapi.signin.go('signinButton')
+        },250);
+    }
     
     // Redirection to the login page:
-    $location.path( '/login' );
+    //$location.path( '/login' );
 }])
 .controller('LoginController', ['$scope','$location', function($scope,$location) {
     console.log( 'login' )
     
-    if ( window.gapi ) gapi.signin.go('signinButton')
-    
+    if ( window.gapi ) {
+        setTimeout(function(){
+            gapi.signin.go('signinButton')
+        },250);
+    }
 }])
 // .controller('ListController', ['$scope','$location','$route','meshio', function($scope,$location,$route,meshio) {
     
@@ -140,7 +151,9 @@ mesh
       };
     
     window.onkeypress = function(event){
-        document.getElementById('s').focus();
+        if ( document.getElementById('s') ) {
+            document.getElementById('s').focus();
+        }
     }
     
     $scope.breadcrumb = function() {
