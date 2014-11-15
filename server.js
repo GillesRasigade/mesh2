@@ -1169,12 +1169,12 @@ server.put(commandRegEx, function (req, res, next) {
                     var cover = req.params.target + '/' + decodeURIComponent( unescape( path.replace(/^.*\/[^\/]*(\.[^\.]+)$/,'.cover$1')));
                     
                     
-                    //console.log( 'cover copy' , path , cover );
+                    // console.log( 'cover copy' , path , cover );
                     
                     fs.copy( path, config.base+'/'+cover, function(err){
                         if(err)throw err;
-                        //console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ ') );
-                        var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(' ','\\ '),function (err, stdout, stderr) {});
+                        // console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(/ /g,'\\ ') );
+                        var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(/ /g,'\\ '),function (err, stdout, stderr) {});
                         
                         resSuccess(null, res);
                     });
