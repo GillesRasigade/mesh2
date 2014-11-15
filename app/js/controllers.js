@@ -111,7 +111,7 @@ mesh
     $scope.s = $rootScope.s ? $rootScope.s : '';
     $scope.server = '' !== server && server != path ? server : 'localhost';
     $scope.loaded = 0;
-    $scope.limit = 10;
+    $scope.limit = 50;
     $scope.total = -1;
     $scope.busy = false;
     $scope.scrollTop = 0;
