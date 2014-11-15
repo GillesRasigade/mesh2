@@ -1173,8 +1173,8 @@ server.put(commandRegEx, function (req, res, next) {
                     
                     fs.copy( path, config.base+'/'+cover, function(err){
                         if(err)throw err;
-                        // console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(/ /g,'\\ ') );
-                        var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^-]+)?\.[^\.]*$/,'*')).replace(/ /g,'\\ '),function (err, stdout, stderr) {});
+                        // console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ ') );
+                        var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ '),function (err, stdout, stderr) {});
                         
                         resSuccess(null, res);
                     });
