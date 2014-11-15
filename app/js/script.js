@@ -1,4 +1,4 @@
-var mesh = angular.module('mesh', ['components','ngResource','ngRoute','ngSanitize','firebase'])
+var mesh = angular.module('mesh', ['components','ngResource','ngRoute','ngSanitize','firebase','ui.bootstrap'])
     
 .config(function($sceProvider) {
     // Completely disable SCE.  For demonstration purposes only!

@@ -55,6 +55,10 @@
         
         <div id="files-list">
             <div class="container files-list">
+                
+                <div ng-if="folders.length == 0">
+                    <h2 style="color: #aaa; font-style: italic;">Nothing found here!</h2>
+                </div>
             
                 <div  id="{{ folder.$$hashKey }}" ng-repeat="folder in folders | type:'directory' " class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
                     <a href="#/{{server}}{{folder.path}}">

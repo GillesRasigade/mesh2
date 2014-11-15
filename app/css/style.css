@@ -6,7 +6,6 @@
 body {
   background-color: #eee;
   -webkit-app-region: drag;
-  -webkit-transform: translateZ(0);
 }
 
 #signin {
