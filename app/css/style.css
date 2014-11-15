@@ -290,6 +290,13 @@ body {
     box-shadow: none;
     padding: 0px;
 }
+
+.menu-quick-action {
+    padding: 10px;
+    display: inline-block;
+    cursor: pointer;
+}
+
 .directory a,
 .directory a:hover {
     color: black;

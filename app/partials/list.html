@@ -129,13 +129,19 @@
                                 <button class="btn btn-mini btn-link dropdown-toggle" ng-click="showMenu = ! showMenu" onClick="event.preventDefault();" data-toggle="dropdown" style="padding: 0.5em 1em;">...</button>
                             </div>
                             <ul class="dropdown-menu pull-right" ng-show="showMenu">
+                                <li style="border-bottom: 1px solid #aaa;">
+                                    <span ng-click="delete(image.path)" class="menu-quick-action"><i class="fa fa-remove"></i></span>
+                                    <span ng-click="download(image.path)" class="menu-quick-action"><i class="fa fa-download"></i></span>
+                                    <span ng-click="rotate(image,-90)" class="menu-quick-action"><i class="fa fa-rotate-left"></i></span>
+                                    <span ng-click="rotate(image,+90)" class="menu-quick-action"><i class="fa fa-rotate-right"></i></span>
+                                </li>
                                 <!--li><a href="javascript:void(0);" ng-click="reset(image.path)">Reset</a></li-->
-                                <li><a href="javascript:void(0);" ng-click="download(image.path)">Download</a></li>
-                                <li><a href="javascript:void(0);" ng-click="cover(image.path)">Cover</a></li>
-                                <li><a href="javascript:void(0);" ng-click="rename(image.path)">Rename</a></li>
-                                <li><a href="javascript:void(0);" ng-click="delete(image.path)">Delete</a></li>
-                                <li><a href="javascript:void(0);" ng-click="rotate(image,-90)">Rotate -90°</a></li>
-                                <li><a href="javascript:void(0);" ng-click="rotate(image,+90)">Rotate +90°</a></li>
+                                <li><a href="javascript:void(0);" ng-click="download(image.path)"><i class="fa fa-download"></i> Download</a></li>
+                                <li><a href="javascript:void(0);" ng-click="cover(image.path)"><i class="fa fa-book"></i> Cover</a></li>
+                                <li><a href="javascript:void(0);" ng-click="rename(image.path)"><i class="fa fa-edit"></i> Rename</a></li>
+                                <li><a href="javascript:void(0);" ng-click="delete(image.path)"><i class="fa fa-remove"></i> Delete</a></li>
+                                <li><a href="javascript:void(0);" ng-click="rotate(image,-90)"><i class="fa fa-rotate-left"></i> Rotate -90°</a></li>
+                                <li><a href="javascript:void(0);" ng-click="rotate(image,+90)"><i class="fa fa-rotate-right"></i> Rotate +90°</a></li>
                                 <li><a href="javascript:void(0);" ng-click="rotate(image,+180)">Rotate 180°</a></li>
                             </ul>
                         </div>
