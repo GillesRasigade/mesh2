@@ -61,29 +61,35 @@
                 </div>
             
                 <div  id="{{ folder.$$hashKey }}" ng-repeat="folder in folders | type:'directory' " class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
-                    <a href="#/{{server}}{{folder.path}}">
-                        <div class="directory-inner thumbnail" title="{{folder.path | rm:path }}">
+                    <div class="directory-inner thumbnail" title="{{folder.path | rm:path }}">
                             <!--img ng-src="{{ folder.path | thumb }}"-->
+                        <a href="#/{{server}}{{folder.path}}">
                             <div class="directory-thumb-background">
-                                <div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}{{ folder._r ? '&_=' + folder._r : '' }}');"></div>
+                                <!--div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}{{ folder._r ? '&_=' + folder._r : '' }}');"></div!-->
+                                <div class="directory-thumb" ng-style="{ 'background-image':'url(' + ( folder.path | thumb:500:500 | server:this ) + ( folder._r ? '&_=' + folder._r : '' ) + ')' }"></div>
                             </div>
-                            <div class="caption">
-                                <div class="actions-menu">
-                                    <div class="actions btn-group dropup">
-                                        <button class="btn btn-mini btn-link dropdown-toggle" ng-click="showMenu = ! showMenu" onClick="event.preventDefault();" data-toggle="dropdown" style="padding: 0.5em 1em;">...</button>
-                                    </div>
-                                    <ul class="dropdown-menu pull-right" ng-show="showMenu">
-                                        <!--li><a href="javascript:void(0);" ng-click="reset(folder.path)">Reset</a></li-->
-                                        <li><a href="javascript:void(0);" ng-click="download(folder.path)">Download</a></li>
-                                        <li><a href="javascript:void(0);" ng-click="rename(folder.path)">Rename</a></li>
-                                        <li><a href="javascript:void(0);" ng-click="delete(folder.path)">Delete</a></li>
-                                    </ul>
+                        </a>
+                        <div class="caption">
+                            <div class="actions-menu">
+                                <div class="actions btn-group dropup">
+                                    <button class="btn btn-mini btn-link dropdown-toggle" ng-click="showMenu = ! showMenu" onClick="event.preventDefault();" data-toggle="dropdown" style="padding: 0.5em 1em;">...</button>
                                 </div>
-                                <div class="directory-name" ng-bind-html="folder.path | rm:path | rm:'^.*\/' | highlight:s | rm:'\\d{4}-\\d{2}-\\d{2}[^ ]*'"></div>
-                                <div class="directory-details" ng-bind-html="folder | details:this "></div>
+                                <ul class="dropdown-menu pull-right" ng-show="showMenu">
+                                    <li style="border-bottom: 1px solid #aaa;">
+                                        <span ng-click="delete(folder.path)" class="menu-quick-action"><i class="fa fa-remove"></i></span>
+                                        <span ng-click="download(folder.path)" class="menu-quick-action"><i class="fa fa-download"></i></span>
+                                        <span ng-click="rename(folder.path)" class="menu-quick-action"><i class="fa fa-edit"></i></span>
+                                    </li>
+                                    <!--li><a href="javascript:void(0);" ng-click="reset(folder.path)">Reset</a></li-->
+                                    <li><a href="javascript:void(0);" ng-click="download(folder.path)"><i class="fa fa-download"></i> Download</a></li>
+                                    <li><a href="javascript:void(0);" ng-click="rename(folder.path)"><i class="fa fa-edit"></i> Rename</a></li>
+                                    <li><a href="javascript:void(0);" ng-click="delete(folder.path)"><i class="fa fa-remove"></i> Delete</a></li>
+                                </ul>
                             </div>
+                            <div class="directory-name" ng-bind-html="folder.path | rm:path | rm:'^.*\/' | highlight:s | rm:'\\d{4}-\\d{2}-\\d{2}[^ ]*'"></div>
+                            <div class="directory-details" ng-bind-html="folder | details:this "></div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
     

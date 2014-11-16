@@ -495,8 +495,8 @@ mesh
                 if ( mesh._data[$scope.server+':'+parent] ) {
                     var data = mesh._data[$scope.server+':'+parent];
                     for ( var i in data.folders ) {
-                        console.log( 485 , data.folders[i].path , target );
                         if ( data.folders[i].path == target ) {
+                            console.log( 485 , data.folders[i].path , target );
                             data.folders[i]._r = (new Date).getTime();
                             break;
                         }
@@ -504,6 +504,12 @@ mesh
                 }
                 
                 try{ $scope.$digest(); } catch(e){}
+                
+                // Force updating the album cover:
+                var src = $filter('server')($filter('thumb')(target,500,500),$scope)+'&_='+(new Date).getTime();
+                // console.log( 509 , 'preload album thumb on cover change')
+                var img = new Image();
+                img.src = src;
                 
             });
     }
@@ -626,7 +632,17 @@ mesh
                     
                     console.log( data );
                     
-                    $scope.reload();
+                    if ( mesh._data[$scope.server+':'+$scope.path] ) {
+                        mesh._data[$scope.server+':'+path].folders.push({
+                            path: $scope.path + '/' + name,
+                            type: 'directory'
+                        })
+                        // mesh._data[$scope.server+':'+$scope.path].folders = $scope.folders;
+                    }
+                    
+                    
+                    try{ $scope.$digest(); } catch(e){}
+                    // $scope.reload();
                     
                     
                 });

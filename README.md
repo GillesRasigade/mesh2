@@ -26,3 +26,9 @@
 ### zip
 
     sudo apt-get install zip
+
+## Project Roadmap
+
+* Move files and folders by drag and drop
+* Avoid the blank effect when applying a new album cover
+* Add a folders tree explorer on the left
