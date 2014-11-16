@@ -120,6 +120,21 @@ mesh
         }));
     }
     
+    this.tree = function ( path , server ) {
+ 
+        path = undefined !== path ? path : '';
+        server = undefined !== server ? server : 'localhost';
+        
+        var params = { tree: 1 }
+ 
+        return ( this.request({
+            server: server,
+            method: "get",
+            url: '/dir/' + path,
+            params: params
+        }));
+    }
+    
     this.download = function ( path , server ) {
         if ( path ) {
             

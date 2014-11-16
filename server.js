@@ -355,7 +355,12 @@ var createItems = function ( req , res , path , files ) {
             relpath = current.replace(config.base,"/");
             (fs.lstatSync(current).isSymbolicLink()) ? link = true : link = false;
             if ( !relpath.match(/\/\./) ) {
-                if (fs.lstatSync(current).isDirectory()) {
+                if ( req.params.tree ) {
+                    if (fs.lstatSync(current).isDirectory()) {
+                        output_dirs.push( relpath );
+                        // output_dirs[ relpath ] = {};
+                    }
+                } else if (fs.lstatSync(current).isDirectory()) {
                     //output_dirs[files[i]] = createItem(current,relpath,"directory",link);
                     output_dirs.push( createItem(current,relpath,"directory",link) );
                 } else {
@@ -964,6 +969,12 @@ server.get(commandRegEx, function (req, res, next) {
                     }
                     
                 }
+                
+                break;
+            
+            case 'tree':
+                
+                
                 
                 break;
                 

@@ -30,5 +30,5 @@
 ## Project Roadmap
 
 * Move files and folders by drag and drop
-* Avoid the blank effect when applying a new album cover
+* Avoid the blank effect when applying a new album cover -> ok
 * Add a folders tree explorer on the left

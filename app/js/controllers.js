@@ -90,7 +90,7 @@ mesh
     
     
 // }])
-.controller('ListController', ['$scope','$rootScope','$filter','$location','$route','meshio', function($scope,$rootScope,$filter,$location,$route,meshio) {
+.controller('ListController', ['$scope','$rootScope','$filter','$location','$route','$compile','meshio', function($scope,$rootScope,$filter,$location,$route,$compile,meshio) {
     
     // Require the user to be logged in:
     // if ( undefined === mesh._auth ) $location.path('/logout');
@@ -683,6 +683,117 @@ mesh
                 
             });
     }
+    
+    $scope.tree = function ( path , callback ) {
+        console.log( 'Tree explorer' );
+        
+        
+        if ( undefined === path ) {
+            var paths = $scope.path.split('/');
+            var p = '' , f = function() {
+                if ( paths.length ) {
+                    p += ( '/' + paths.shift() );
+                    p = p.replace(/\/+/g,'/').replace(/\/$/,'');
+                    // console.log( 695 , p );
+                    $scope.tree(p,f);
+                    
+                    // Move to the element:
+                    //var offsetTop = angular.element( document.getElementById( 'tree-Images-Photos-2009' )).prop('offsetTop')
+                }
+            }
+            // console.log( 695 , ( '/' + $scope.path ).replace(/\/+/g,'/') , ( '/' + $scope.path ).replace(/\/+/g,'/').split('/') , paths );
+            f();
+            return;
+        }
+        
+        path = path.replace(/\/$/,'');
+        
+        var pattern = /[\/ &!?\',]+/g;
+        var id = 'tree'+path.replace(pattern,'-');
+        console.log( 'tree' , 'element' , id );
+        
+        $tree = angular.element( document.getElementById( id ));
+        
+        $caret = angular.element( document.getElementById( id +'-caret' ));
+        console.log( 'tree' , 694 , $caret , $caret.hasClass('fa-caret-down') , '#'+ id +' .fa' );
+        if ( $caret.hasClass('fa-caret-down') ) {
+            
+            $caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+            
+            console.log( 'tree' , '#'+ id +' ul' , 'ezfzefzef');
+            angular.element( document.querySelector( '#'+ id +' ul' )).css('display','none');
+            
+            $compile($caret.contents())($scope);
+            
+            if ( 'function' === typeof(callback) ) callback();
+            
+            
+        } else {
+            
+            $caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+            
+            $compile($caret.contents())($scope);
+            
+            $ul = angular.element( document.querySelector( '#'+ id +' ul' ));
+            console.log( 'tree' , id , $ul )
+            if ( 0 !== $ul.length ) {
+                $ul.css('display','block');
+                
+                if ( 'function' === typeof(callback) ) callback();
+                
+            } else {
+                $ul = angular.element('<ul></ul>');
+                
+                var render = function( data ) {
+                    console.log( 'tree' , path , data );
+                    if ( data.list ) {
+                        for ( var i in data.list ) {
+                            var directory = data.list[i].replace( path , '' ).replace( /\//g , '' );
+                            tree[directory] = {};
+                            $ul.append('\
+                            <li id="'+id+'-'+directory.replace(pattern,'-')+'">\
+                                <i id="'+id+'-'+directory.replace(pattern,'-')+'-caret" class="fa fa-caret-right" ng-click="tree(\''+(path+'/'+directory).replace(/\'/,'\\\'')+'\')"></i> \
+                                <a href="#/'+$scope.server+path+'/'+directory+'">'+directory.replace(/\d{4}-\d{2}[^ ]* /,'')+'</a>\
+                            </li>');
+                        }
+                    }
+                    
+                    console.log( 'tree' , tree );
+                    
+                    $tree.append( $ul );
+                    
+                    var offsetTop = angular.element( document.getElementById( id )).prop('offsetTop');
+                    document.getElementById( 'directories-tree' ).scrollTop = offsetTop;
+                    
+                    // try{ $scope.$digest(); } catch(e){}
+                    $compile($ul.contents())($scope);
+                    
+                    if ( 'function' === typeof(callback) ) callback();
+                }
+                
+                if ( mesh._tree && mesh._tree[$scope.server+':'+path] ) {
+                    render(mesh._tree[$scope.server+':'+path]);
+                } else {
+                    meshio
+                        .tree( path , $scope.server )
+                        .then(function( data ){
+                            
+                            if ( !mesh._tree ) mesh._tree = {};
+                            mesh._tree[$scope.server+':'+path] = data;
+                            
+                            render(data);
+                            
+                            
+                        });
+                }
+                
+            }
+        }
+        
+        // $compile($tree.contents())($scope);
+    }
+            
+    $scope.tree();
 }])
 
 .controller('ServersController', ['$scope','$rootScope','$location','meshio', function($scope,$rootScope,$location,meshio) {
