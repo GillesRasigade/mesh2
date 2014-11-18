@@ -32,7 +32,7 @@
     
         <div class="">
         
-            <div id="directories-tree" class="col-sm-3 hidden-xs">
+            <div ng-show="settings.displayTree" id="directories-tree" class="col-sm-3 hidden-xs">
                 <ul>
                     <li id="tree">
                         <a href="#/{{ server }}/">&nbsp;</a>
@@ -40,12 +40,25 @@
                 </ul>
             </div>
         
-            <div class="col-sm-offset-3 col-sm-9 col-xs-12">
+            <div class="{{ settings.displayTree ? 'col-sm-offset-3 col-sm-9 col-xs-12' : 'container' }}">
+        
         
                 <div role="form">
+                    
                     <div class="row form-group has-feedback" style="margin-bottom: 0px;">
+                        <a href="javascript:void(0);" ng-click="settings.displayTree = !settings.displayTree" style="position: absolute;
+left: -30px;
+z-index: 999;
+margin-right: -100%;
+color: #888;
+font-size: 25px;
+line-height: 45px;">
+                            <i class="fa fa-caret-{{ settings.displayTree ? 'left' : 'right' }}"></i>
+                        </a>
                     
                         <div class="col-xs-12 col-sm-6">
+                        
+                        
                           <!--label class="control-label" for="search">Input with success</label-->
                           <input type="search" ng-change="search()" ng-model="s" class="form-control" id="s" placeholder="Search for albums and files" value="{{ s }}" style="border-radius: 1.25em;"/>
                           <span class="glyphicon glyphicon-search form-control-feedback" style="top: 5px; right: 20px;"></span>

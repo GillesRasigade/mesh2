@@ -90,7 +90,7 @@ mesh
     
     
 // }])
-.controller('ListController', ['$scope','$rootScope','$filter','$location','$route','$compile','meshio', function($scope,$rootScope,$filter,$location,$route,$compile,meshio) {
+.controller('ListController', ['$scope','$rootScope','$filter','$location','$route','$compile','meshio','settings', function($scope,$rootScope,$filter,$location,$route,$compile,meshio,settings) {
     
     // Require the user to be logged in:
     // if ( undefined === mesh._auth ) $location.path('/logout');
@@ -120,6 +120,7 @@ mesh
     $scope.showVideo = '';
     
     $scope.servers = mesh._servers;
+    $scope.settings = settings;
     
     
     localStorage.setItem( 'route' , $route.current.params.path );
@@ -750,10 +751,18 @@ mesh
                         for ( var i in data.list ) {
                             var directory = data.list[i].replace( path , '' ).replace( /\//g , '' );
                             tree[directory] = {};
+                            
+                            var date = directory.replace(/^(\d{4}-\d{2}[^ ]*) .*$/,'$1');
+                            
                             $ul.append('\
-                            <li id="'+id+'-'+directory.replace(pattern,'-')+'">\
+                            <li id="'+id+'-'+directory.replace(pattern,'-')+'" class="'+( $scope.path == data.list[i] ? 'active' : '' )+'">\
                                 <i id="'+id+'-'+directory.replace(pattern,'-')+'-caret" class="fa fa-caret-right" ng-click="tree(\''+(path+'/'+directory).replace(/\'/,'\\\'')+'\')"></i> \
-                                <a href="#/'+$scope.server+path+'/'+directory+'">'+directory.replace(/\d{4}-\d{2}[^ ]* /,'')+'</a>\
+                                <a href="#/'+$scope.server+path+'/'+directory+'">'+directory.replace(/^\d{4}-\d{2}[^ ]* /,'')+
+                                    ( date != directory ? '<br/><span class="tree-details">' + date + '</span>' : '') +
+                                '</a>\
+                                <div class="tree-thumb" style="background-image: url(\''+
+                                    $filter('server')($filter('thumb')(path+'/'+directory,100,100),$scope)+
+                                '\');">\
                             </li>');
                         }
                     }
@@ -763,7 +772,7 @@ mesh
                     $tree.append( $ul );
                     
                     var offsetTop = angular.element( document.getElementById( id )).prop('offsetTop');
-                    document.getElementById( 'directories-tree' ).scrollTop = offsetTop;
+                    document.getElementById( 'directories-tree' ).scrollTop = offsetTop - 10;
                     
                     // try{ $scope.$digest(); } catch(e){}
                     $compile($ul.contents())($scope);

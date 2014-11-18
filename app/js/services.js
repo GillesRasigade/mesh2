@@ -351,3 +351,9 @@ mesh
     }
     
 })
+
+.factory("settings",function(){
+        return {
+            displayTree: true
+        };
+});
