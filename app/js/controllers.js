@@ -757,7 +757,7 @@ mesh
                     if ( data.list ) {
                         for ( var i in data.list ) {
                             
-                            var directory = data.list[i].replace( path , '' ).replace( /\/$/g , '' ).replace( /^.*\//g , '' );
+                            var directory = data.list[i].replace( path , '' ).replace( /\/$/g , '' ).replace( /^\//g , '' );
                             tree[directory] = {};
                             
                             console.log( 756 , directory )
@@ -771,7 +771,7 @@ mesh
                                     '<i class="fa fa-folder"></i>'+
                                     '<i class="fa fa-folder-open"></i>'+
                                     '<span class="tree-title">'+
-                                        directory.replace(/^\d{4}-\d{2}[^ ]* /,'')+
+                                        directory.replace(/^.*\//,'').replace(/^\d{4}-\d{2}[^ ]* /,'')+
                                     '</span>'+
                                     ( date != directory ? '<br/><span class="tree-details">' + date + '</span>' : '') +
                                 '</a>\
