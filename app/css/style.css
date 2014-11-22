@@ -34,6 +34,7 @@ body {
 .navbar.header {
     background-color: #ddd;
     box-shadow: 0px 0px 5px #666;
+    border: none;
 }
 
 .form-control {
@@ -118,11 +119,22 @@ body {
     overflow: auto;
     padding: 0px;
     padding-bottom: 200px;
-    background: #e3e3e3;
+    background: #eee;
     /*background: #dadada;*/
-    box-shadow: inset -12px 0px 10px black;
+    /*box-shadow: inset -12px 0px 10px black;*/
     overflow-y: scroll;
     border-right: 2px solid #eee;
+}
+#directories-tree::-webkit-scrollbar {
+    /*background: white;*/
+    width: 0px;
+}
+/*#directories-tree::-webkit-scrollbar-track {*/
+/*    background: white;*/
+/*}*/
+#directories-tree::-webkit-scrollbar-track-piece {
+    background: white;
+    /*width: 5px;*/
 }
 #directories-tree .tree-thumb {
     float: right;
@@ -148,8 +160,16 @@ body {
     font-size: 0.8em;
     color: #999;
 }
+#directories-tree a i.fa {
+    color: #333;
+    position: relative;
+    top: -5px;
+}
+#directories-tree a .tree-title {
+    
+}
 #directories-tree a {
-    color: #666;
+    color: #333;
     float: left;
     padding: 5px;
     width: 100%;
@@ -157,15 +177,21 @@ body {
     height: 52px;
     border: 1px solid transparent;
 }
-#directories-tree li.active > a,
 #directories-tree a:hover {
     background: #eee;
     text-decoration: none;
 }
 #directories-tree li.active > a {
-    border-color: #aaa;
-    box-shadow: -1px 0px 5px #ccc;
+    background: #eee;
+    border-color: #eee;
+    /*box-shadow: -1px 0px 5px #ccc;*/
 }
+
+#directories-tree li.active > a i.fa-folder,
+#directories-tree li:not(.active) > a i.fa-folder-open {
+    display: none;
+}
+
 #directories-tree li {
     
 }
@@ -300,7 +326,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     border: 5px solid white;
-    box-shadow: 0px 0px 50px #333;
+    /*box-shadow: 0px 0px 50px #333;*/
 }
 
 .show-lateral {
@@ -396,13 +422,15 @@ body {
 }
 
 .directory-inner {
-    background-color: #fff;
+    background-color: transparent;
     border-radius: 0px;
     padding: 0px;
     text-decoration: none;
+    border: 0px;
 }
 
 .directory-inner:hover {
+    background: #fff;
     text-decoration: none;
 }
 .directory.dragover .directory-inner {

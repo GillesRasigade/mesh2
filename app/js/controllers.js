@@ -757,7 +757,12 @@ mesh
                             $ul.append('\
                             <li id="'+id+'-'+directory.replace(pattern,'-')+'" class="'+( $scope.path == data.list[i] ? 'active' : '' )+'">\
                                 <i id="'+id+'-'+directory.replace(pattern,'-')+'-caret" class="fa fa-caret-right" ng-click="tree(\''+(path+'/'+directory).replace(/\'/,'\\\'')+'\')"></i> \
-                                <a href="#/'+$scope.server+path+'/'+directory+'">'+directory.replace(/^\d{4}-\d{2}[^ ]* /,'')+
+                                <a href="#/'+$scope.server+path+'/'+directory+'">'+
+                                    '<i class="fa fa-folder"></i>'+
+                                    '<i class="fa fa-folder-open"></i>'+
+                                    '<span class="tree-title">'+
+                                        directory.replace(/^\d{4}-\d{2}[^ ]* /,'')+
+                                    '</span>'+
                                     ( date != directory ? '<br/><span class="tree-details">' + date + '</span>' : '') +
                                 '</a>\
                                 <div class="tree-thumb" style="background-image: url(\''+
