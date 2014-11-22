@@ -138,6 +138,8 @@ mesh
                 $scope.loaded = 0;
                 console.log( 'search for: ' , $scope.s );
                 
+                $scope.tree($scope.path,$scope.s)
+                
                 // $rootScope.s = $scope.s;
                 
                 $scope.load();
@@ -685,9 +687,12 @@ mesh
             });
     }
     
-    $scope.tree = function ( path , callback ) {
+    $scope.tree = function ( path , search , callback ) {
         console.log( 'Tree explorer' );
         
+        search = undefined === search ? undefined : search;
+        
+        console.log( 'tree search' , search );
         
         if ( undefined === path ) {
             var paths = $scope.path.split('/');
@@ -696,7 +701,7 @@ mesh
                     p += ( '/' + paths.shift() );
                     p = p.replace(/\/+/g,'/').replace(/\/$/,'');
                     // console.log( 695 , p );
-                    $scope.tree(p,f);
+                    $scope.tree(p,search,f);
                     
                     // Move to the element:
                     //var offsetTop = angular.element( document.getElementById( 'tree-Images-Photos-2009' )).prop('offsetTop')
@@ -706,6 +711,8 @@ mesh
             f();
             return;
         }
+        
+        console.log( 'tree search' , search );
         
         path = path.replace(/\/$/,'');
         
@@ -717,7 +724,7 @@ mesh
         
         $caret = angular.element( document.getElementById( id +'-caret' ));
         console.log( 'tree' , 694 , $caret , $caret.hasClass('fa-caret-down') , '#'+ id +' .fa' );
-        if ( $caret.hasClass('fa-caret-down') ) {
+        if ( !search && $caret.hasClass('fa-caret-down') ) {
             
             $caret.removeClass('fa-caret-down').addClass('fa-caret-right');
             
@@ -737,7 +744,7 @@ mesh
             
             $ul = angular.element( document.querySelector( '#'+ id +' ul' ));
             console.log( 'tree' , id , $ul )
-            if ( 0 !== $ul.length ) {
+            if ( !search && 0 !== $ul.length ) {
                 $ul.css('display','block');
                 
                 if ( 'function' === typeof(callback) ) callback();
@@ -746,11 +753,14 @@ mesh
                 $ul = angular.element('<ul></ul>');
                 
                 var render = function( data ) {
-                    console.log( 'tree' , path , data );
+                    console.log( 'tree' , 756 , path , data );
                     if ( data.list ) {
                         for ( var i in data.list ) {
-                            var directory = data.list[i].replace( path , '' ).replace( /\//g , '' );
+                            
+                            var directory = data.list[i].replace( path , '' ).replace( /\/$/g , '' ).replace( /^.*\//g , '' );
                             tree[directory] = {};
+                            
+                            console.log( 756 , directory )
                             
                             var date = directory.replace(/^(\d{4}-\d{2}[^ ]*) .*$/,'$1');
                             
@@ -785,16 +795,27 @@ mesh
                     if ( 'function' === typeof(callback) ) callback();
                 }
                 
-                if ( mesh._tree && mesh._tree[$scope.server+':'+path] ) {
+                if ( !search && mesh._tree && mesh._tree[$scope.server+':'+path] ) {
                     render(mesh._tree[$scope.server+':'+path]);
                 } else {
+                    
+                    console.log( 794 , 'tree' , search );
                     meshio
-                        .tree( path , $scope.server )
+                        .tree( path , $scope.server , search )
                         .then(function( data ){
                             
-                            if ( !mesh._tree ) mesh._tree = {};
-                            mesh._tree[$scope.server+':'+path] = data;
-                            
+                            if ( undefined !== search ) {
+                                
+                                angular.element( document.querySelector('#tree ul') ).remove();
+                                $tree = angular.element( document.querySelector('#tree') )
+                                
+                            } else {
+                                
+                                if ( !mesh._tree ) mesh._tree = {};
+                                mesh._tree[$scope.server+':'+path] = data;
+                                
+                                
+                            }
                             render(data);
                             
                             

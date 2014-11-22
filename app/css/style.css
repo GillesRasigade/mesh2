@@ -161,7 +161,7 @@ body {
     color: #999;
 }
 #directories-tree a i.fa {
-    color: #333;
+    color: #666;
     position: relative;
     top: -5px;
 }
@@ -169,7 +169,7 @@ body {
     
 }
 #directories-tree a {
-    color: #333;
+    color: #666;
     float: left;
     padding: 5px;
     width: 100%;
@@ -180,6 +180,9 @@ body {
 #directories-tree a:hover {
     background: #eee;
     text-decoration: none;
+}
+#directories-tree a:hover i.fa {
+    color: #000;
 }
 #directories-tree li.active > a {
     background: #eee;

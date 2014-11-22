@@ -120,12 +120,15 @@ mesh
         }));
     }
     
-    this.tree = function ( path , server ) {
+    this.tree = function ( path , server , search ) {
  
         path = undefined !== path ? path : '';
         server = undefined !== server ? server : 'localhost';
+        search = undefined !== search ? search : '';
         
         var params = { tree: 1 }
+
+        if ( search ) params.s = search;
  
         return ( this.request({
             server: server,
