@@ -422,11 +422,10 @@ body {
 }
 
 .directory-inner {
-    background-color: transparent;
+    background-color: white;
     border-radius: 0px;
     padding: 0px;
     text-decoration: none;
-    border: 0px;
 }
 
 .directory-inner:hover {
