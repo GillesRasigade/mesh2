@@ -687,6 +687,11 @@ mesh
             });
     }
     
+    angular.element( document.getElementById( 'directories-tree' ) ).off('scroll').on('scroll', function(event) {
+        settings.treeScroll = angular.element( document.getElementById( 'directories-tree' ) ).prop('scrollTop');
+        // console.log(692,settings.treeScroll);
+    });
+    
     $scope.tree = function ( path , search , callback ) {
         console.log( 'Tree explorer' );
         
@@ -762,7 +767,7 @@ mesh
                             
                             console.log( 756 , directory )
                             
-                            var date = directory.replace(/^(\d{4}-\d{2}[^ ]*) .*$/,'$1');
+                            var date = directory.replace(/^.*\//,'').replace(/^(\d{4}-\d{2}[^ ]*) .*$/,'$1');
                             
                             $ul.append('\
                             <li id="'+id+'-'+directory.replace(pattern,'-')+'" class="'+( $scope.path == data.list[i] ? 'active' : '' )+'">\
@@ -786,8 +791,8 @@ mesh
                     
                     $tree.append( $ul );
                     
-                    var offsetTop = angular.element( document.getElementById( id )).prop('offsetTop');
-                    document.getElementById( 'directories-tree' ).scrollTop = offsetTop - 10;
+                    var scrollTop = settings.treeScroll;
+                    document.getElementById( 'directories-tree' ).scrollTop = scrollTop;
                     
                     // try{ $scope.$digest(); } catch(e){}
                     $compile($ul.contents())($scope);

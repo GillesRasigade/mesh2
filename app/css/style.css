@@ -115,7 +115,7 @@ body {
 #directories-tree {
     position: fixed;
     bottom: 0px;
-    top: 47px;
+    top: 52px;
     overflow: auto;
     padding: 0px;
     padding-bottom: 200px;
@@ -124,6 +124,7 @@ body {
     /*box-shadow: inset -12px 0px 10px black;*/
     overflow-y: scroll;
     border-right: 2px solid #eee;
+    overflow-x: hidden;
 }
 #directories-tree::-webkit-scrollbar {
     /*background: white;*/
@@ -143,22 +144,25 @@ body {
     background-position: center center;
     border-radius: 2px;
     margin-left: -50px;
-    margin-right: 10px;
+    margin-right: 0px;
     margin-top: 1px;
+    border-right: 3px solid #eee;
 }
 #directories-tree i.fa {
     /*border: 1px solid red;*/
     padding: 8px 10px 0px 10px;
     color: #999;
     float: left;
-    height: 50px;
+    height: 25;
 }
 #directories-tree i.fa:hover {
     color: #000;
 }
 #directories-tree .tree-details {
     font-size: 0.8em;
-    color: #999;
+    color: #bbb;
+    top: -5px;
+    position: relative;
 }
 #directories-tree a i.fa {
     color: #666;
@@ -171,22 +175,28 @@ body {
 #directories-tree a {
     color: #666;
     float: left;
-    padding: 5px;
+    padding: 5px 0px 0px 0px;
+    /*height: 100%;*/
     width: 100%;
     margin-right: -100%;
     height: 52px;
     border: 1px solid transparent;
+    /*margin-bottom: 5px;*/
 }
 #directories-tree a:hover {
-    background: #eee;
+    background: #f6f6f6;
     text-decoration: none;
 }
 #directories-tree a:hover i.fa {
     color: #000;
 }
+#directories-tree a:hover .tree-details {
+    color: #666;
+}
 #directories-tree li.active > a {
-    background: #eee;
+    background: #fff;
     border-color: #eee;
+    margin-left: -4px;
     /*box-shadow: -1px 0px 5px #ccc;*/
 }
 
@@ -196,7 +206,6 @@ body {
 }
 
 #directories-tree li {
-    
 }
 #directories-tree li:hover > a {
     color: #333;
@@ -214,7 +223,6 @@ body {
     display: block;
     max-width: 100%;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     
     display: inline-block;
@@ -222,8 +230,8 @@ body {
     margin: 0px;
     
     display: block;
-    padding: 5px 0px 5px 5px;
-    margin-bottom: 1px;
+    padding: 0px 0px 0px 5px;
+    margin-bottom: 0px;
 }
 
 .round-action {
