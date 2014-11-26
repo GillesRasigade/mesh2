@@ -26,6 +26,17 @@ angular.module('components', [])
             replace: true
         }
     })
+    .directive('search',function(){
+        return {
+            restrict: 'E',
+            transclude: true,
+            scope: {},
+            template: '\
+              <input type="search" class="form-control" id="s" placeholder="Search for albums and files" value="{{ s }}" />\
+            ',
+            replace: true
+        }
+    })
     
     .directive('signin',function(){
         return {
@@ -36,9 +47,9 @@ angular.module('components', [])
             template: mesh._profile ? '<a href="//plus.google.com/'+mesh._profile.id+'?prsrc=3" '+
                             'rel="publisher" target="_top" style="text-decoration:none;display:inline-block;color:#333;text-align:center; font:13px/16px arial,sans-serif;white-space:nowrap;">'+
                                 //'<span style="display:inline-block;font-weight:bold;vertical-align:top;margin-right:5px; margin-top:10px;">'+(mesh._profile.name?mesh._profile.name:'...')+'</span>'+
-                                '<span style="display:inline-block;vertical-align:top;margin-right:15px; margin-top:8px;"></span>'+
+                                // '<span style="display:inline-block;vertical-align:top;margin-right:15px; margin-top:8px;"></span>'+
                                 //'<img src="//ssl.gstatic.com/images/icons/gplus-32.png" alt="Google+" style="border:0;width:32px;height:32px;"/>'+
-                                '<img src="'+mesh._profile.picture+'" alt="Google+" style="border:0;width:32px;height:32px;"/>'+
+                                '<img src="'+mesh._profile.picture+'" alt="Google+" style="border:0;width:32px;height:32px;border-radius:16px;"/>'+
                         '</a>' : ''
         }
         

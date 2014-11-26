@@ -101,6 +101,7 @@ mesh
     
     if ( $route.current.params.path ) path += $route.current.params.path;
     
+    
     var server = path.replace(/\/([^\/]+).*/,'$1');
     path = path.replace('/'+server,'');
     
@@ -158,6 +159,13 @@ mesh
             document.getElementById('s').focus();
         }
     }
+    
+    angular.element( document.getElementById('s') ).off('keyup').on('keyup',function(event){
+        console.log( 164 , event.target.value );
+        $scope.s = event.target.value;
+        try{ $scope.$digest(); } catch(e){}
+        $scope.search();
+    })
     
     $scope.breadcrumb = function() {
         

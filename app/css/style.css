@@ -18,6 +18,8 @@ body {
 #signin {
     position: relative;
     top: 0.6em;
+    left: -13px;
+    top: 9px;
 }
 
 #signin.signedIn {
@@ -74,6 +76,7 @@ body {
     height: 100%;
     display: inline-block;
     margin: 0px;
+    padding-right: 6px;
 }
 
 #breadcrumb > li {
@@ -104,8 +107,9 @@ body {
 }
 
 #s {
-    margin-top: 5px;
+    margin-top: 8px;
     margin-bottom: 5px;
+    margin-left: 5px;
     
     /*outline: 0 !important;*/
     box-shadow: none !important;
@@ -115,7 +119,7 @@ body {
 #directories-tree {
     position: fixed;
     bottom: 0px;
-    top: 52px;
+    top: 56px;
     overflow: auto;
     padding: 0px;
     padding-bottom: 200px;

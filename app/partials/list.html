@@ -56,16 +56,15 @@ line-height: 45px;">
                             <i class="fa fa-caret-{{ settings.displayTree ? 'left' : 'right' }}"></i>
                         </a>
                     
-                        <div class="col-xs-12 col-sm-6">
+                        <!--div class="col-xs-12 col-sm-6">
                         
                         
-                          <!--label class="control-label" for="search">Input with success</label-->
                           <input type="search" ng-change="search()" ng-model="s" class="form-control" id="s" placeholder="Search for albums and files" value="{{ s }}" style="border-radius: 1.25em;"/>
                           <span class="glyphicon glyphicon-search form-control-feedback" style="top: 5px; right: 20px;"></span>
                     
-                        </div>
+                        </div-->
                         
-                        <div class="col-xs-12 col-sm-6 hidden-xs">
+                        <div class="col-xs-12 col-sm-12 hidden-xs">
                             <p style="margin-top: 13px; color: #aaa; text-shadow: 1px 1px 0px #fff; text-align: right;">
                                 <span><i>{{ busy ? 'loading...' : '' }}</i></span>
                                 <span ng-show="total>0"> &nbsp; &nbsp;
