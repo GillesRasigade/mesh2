@@ -110,6 +110,7 @@ mesh
     $scope.statistics = {};
     $scope.path = path;
     $scope.s = $rootScope.s ? $rootScope.s : '';
+    var $s = angular.element( document.getElementById('s') ).val( $scope.s );
     $scope.server = '' !== server && server != path ? server : 'localhost';
     $scope.loaded = 0;
     $scope.limit = 50;
@@ -160,7 +161,7 @@ mesh
         }
     }
     
-    angular.element( document.getElementById('s') ).off('keyup').on('keyup',function(event){
+    $s.off('keyup').on('keyup',function(event){
         console.log( 164 , event.target.value );
         $scope.s = event.target.value;
         try{ $scope.$digest(); } catch(e){}

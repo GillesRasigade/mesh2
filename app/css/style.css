@@ -119,7 +119,7 @@ body {
 #directories-tree {
     position: fixed;
     bottom: 0px;
-    top: 56px;
+    top: 16px;
     overflow: auto;
     padding: 0px;
     padding-bottom: 200px;
@@ -319,6 +319,7 @@ body {
 #list {
     position: fixed;
     left: 0px; right: 0px; top: 50px; bottom: 0px;
+    top: 10px;
     overflow-y: auto;
     padding-bottom: 5em;
     padding-top: 10px;
