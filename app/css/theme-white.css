@@ -64,7 +64,7 @@ body,
     margin-bottom: 10px;
 }
 
-#show-panel .object {
+#show-panel video.object {
     max-height:50%;max-width:50%;
 }
 
