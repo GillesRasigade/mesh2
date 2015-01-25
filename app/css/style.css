@@ -18,7 +18,7 @@ body {
 #signin {
     position: relative;
     top: 0.6em;
-    left: -26px;
+    /*left: -32px;*/
     top: 9px;
 }
 
@@ -113,8 +113,11 @@ body {
     
     /*outline: 0 !important;*/
     box-shadow: none !important;
-    border-color: #ddd !important;
+    border-color: #bbb !important;
     border-radius: 20px;
+    
+    position: relative;
+    right: -32px;
 }
 
 #directories-tree {
@@ -320,7 +323,7 @@ body {
 #list {
     position: fixed;
     left: 0px; right: 0px; top: 50px; bottom: 0px;
-    top: 10px;
+    /*top: 10px;*/
     overflow-y: auto;
     padding-bottom: 5em;
     padding-top: 10px;

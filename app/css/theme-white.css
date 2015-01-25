@@ -1,0 +1,68 @@
+
+body,
+.navbar.header {
+    background: #fff;
+    box-shadow: none;
+    border-color: #eee;
+    color: #000;
+}
+
+.navbar.header {
+    border-bottom: 1px solid #ccc;
+    background: #ddd;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #666;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+    color: #333;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    color: #444;
+}
+
+.directory {
+    margin-top: 5px;
+    margin-bottom: -25px;
+}
+
+#directories-tree,
+#directories-tree .tree-thumb {
+    border-color: #eee;
+}
+
+.directory-inner {
+    background: #f6f6f6;
+    border-color: #ddd;
+    box-shadow: 0px 0px 10px #ccc;
+    transition: all ease-in-out 0.25s;
+}
+
+.directory-inner:hover {
+    border-color: #99f;
+    background: #ddf;
+    box-shadow: 0px 0px 10px #66f;
+}
+
+.video.thumb,
+.image-thumb,
+.directory-thumb {
+    background-color: #eee;
+}
+
+.directory-name { color: #666; }
+.directory-details { color: #666; }
+
+.files-list {
+    /*margin: -10px;*/
+}
+
+#show-panel .object {
+    max-height:50%;max-width:50%;
+}

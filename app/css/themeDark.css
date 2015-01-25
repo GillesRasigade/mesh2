@@ -1,0 +1,49 @@
+
+body,
+.navbar.header,
+#directories-tree {
+    background: #000;
+    box-shadow: none;
+    border-color: #000;
+    color: #fff;
+}
+
+.navbar.header {
+    border-bottom: 1px solid #000;
+    background: #000;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #666;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+    color: #333;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    color: #444;
+}
+
+#directories-tree,
+#directories-tree .tree-thumb {
+    border-color: #000;
+}
+
+.directory-inner {
+    background: black;
+    border-color: black;
+}
+
+.directory-inner:hover,
+.video.thumb,
+.image-thumb,
+.directory-thumb {
+    background-color: #111;
+}
+
+.directory-name { color: #ccc; }
+.directory-details { color: #666; }
