@@ -61,8 +61,14 @@ body,
 
 .files-list {
     /*margin: -10px;*/
+    margin-bottom: 10px;
 }
 
 #show-panel .object {
     max-height:50%;max-width:50%;
+}
+
+.dropdown-menu {
+    -webkit-animation-delay: 1s; /* Chrome, Safari, Opera */
+    animation-delay: 1s;
 }

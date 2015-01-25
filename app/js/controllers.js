@@ -646,9 +646,15 @@ mesh
                     
                     if ( mesh._data[$scope.server+':'+$scope.path] ) {
                         mesh._data[$scope.server+':'+path].folders.push({
-                            path: $scope.path + '/' + name,
+                            path: ( $scope.path + '/' + name ).replace(/\/+/g,'/'),
                             type: 'directory'
                         })
+                        
+                        mesh._data[$scope.server+':'+path].folders.sort(function(a,b){
+                            // console.log( 'compare' , a , b , a.path.toLowerCase().localeCompare(b.path.toLowerCase()) )
+                            return a.path.toLowerCase().localeCompare(b.path.toLowerCase());
+                        });
+                        
                         // mesh._data[$scope.server+':'+$scope.path].folders = $scope.folders;
                     }
                     
