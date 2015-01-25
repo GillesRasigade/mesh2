@@ -61,7 +61,8 @@ body,
 
 .files-list {
     /*margin: -10px;*/
-    margin-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: 15px;
 }
 
 #show-panel video.object {
