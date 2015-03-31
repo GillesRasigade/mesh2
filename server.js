@@ -124,7 +124,7 @@ var checkIP = function (config, req) {
 /**
  * Check Google OAuth2 access token
  */
-var checkToken = function ( req, callback , error ) {
+var checkToken = function ( config, req, callback , error ) {
     // REF: http://stackoverflow.com/questions/12296017/how-to-validate-a-oauth2-0-access-token-for-a-resource-server
     // Request: https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=1/fFBGRNJru1FQd44AzqT3Zg
     if ( req.params.access_token ) {
@@ -133,11 +133,18 @@ var checkToken = function ( req, callback , error ) {
         
         var _continue = function() {
             
-            /*if ( tokeninfo.user ) {
+            config.user = null;
+            
+            if ( tokeninfo.user ) {
+                
+                // Save the user parameters to the configuration:
+                config.user = tokeninfo.user;
+                
                 if ( tokeninfo.user.base ) {
+                    config.base = tokeninfo.user.base;
                     // Adapt the config.base for each logged in user.
                 }
-            }*/
+            }
             
             return callback( true );
         }
@@ -212,7 +219,7 @@ var checkReq = function (config, req, res, callback ) {
     // Request: https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=1/fFBGRNJru1FQd44AzqT3Zg
     // if ( config.googleOauth || !checkKey(config, req) )
     
-    return checkToken(req,callback,function(){
+    return checkToken(config,req,callback,function(){
         res.send(401);
         return false;
     });
@@ -355,17 +362,24 @@ var createItems = function ( req , res , path , files ) {
             relpath = current.replace(config.base,"/");
             (fs.lstatSync(current).isSymbolicLink()) ? link = true : link = false;
             if ( !relpath.match(/\/\./) ) {
-                if ( req.params.tree ) {
-                    if (fs.lstatSync(current).isDirectory()) {
-                        output_dirs.push( relpath );
-                        // output_dirs[ relpath ] = {};
+                
+                // Check whether the user has access to this file:
+                var isFiltered = ( config.user.allow && null === current.match( new RegExp( config.user.allow , "i" ) ) );
+                
+                if ( !isFiltered ) {
+                
+                    if ( req.params.tree ) {
+                        if (fs.lstatSync(current).isDirectory()) {
+                            output_dirs.push( relpath );
+                            // output_dirs[ relpath ] = {};
+                        }
+                    } else if (fs.lstatSync(current).isDirectory()) {
+                        //output_dirs[files[i]] = createItem(current,relpath,"directory",link);
+                        output_dirs.push( createItem(current,relpath,"directory",link) );
+                    } else {
+                        //output_files[files[i]] = createItem(current,relpath,"file",link);
+                        output_files.push( createItem(current,relpath,"file",link) );
                     }
-                } else if (fs.lstatSync(current).isDirectory()) {
-                    //output_dirs[files[i]] = createItem(current,relpath,"directory",link);
-                    output_dirs.push( createItem(current,relpath,"directory",link) );
-                } else {
-                    //output_files[files[i]] = createItem(current,relpath,"file",link);
-                    output_files.push( createItem(current,relpath,"file",link) );
                 }
             }
         }
@@ -402,6 +416,10 @@ server.get(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
+        
+        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('GET') ) {
+            res.send(403);
+        }
 
         // Set path
         var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ) );
@@ -1000,6 +1018,10 @@ server.post(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
+        
+        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('POST') ) {
+            res.send(403);
+        }
     
         // Set path
         var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
@@ -1093,6 +1115,10 @@ server.put(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
+        
+        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('PUT') ) {
+            res.send(403);
+        }
     
         // Set path
         var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
@@ -1210,6 +1236,10 @@ server.del(pathRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function() {
+        
+        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('DELETE') ) {
+            res.send(403);
+        }
     
         // Set path
         var path = decodeURIComponent( unescape( config.base + "/" + req.params[1] ));
