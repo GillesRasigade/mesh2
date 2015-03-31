@@ -8,8 +8,18 @@ body,
 }
 
 .navbar.header {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #bbb;
     background: #ddd;
+    
+    background: rgb(230,230,230); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(230,230,230,1) 0%, rgba(221,221,221,1) 52%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,230,230,1)), color-stop(52%,rgba(221,221,221,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(221,221,221,1) 52%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(221,221,221,1) 52%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(221,221,221,1) 52%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(230,230,230,1) 0%,rgba(221,221,221,1) 52%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+
 }
 
 .navbar-default .navbar-nav>li>a {

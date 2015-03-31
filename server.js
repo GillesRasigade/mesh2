@@ -133,11 +133,18 @@ var checkToken = function ( req, callback , error ) {
         
         var _continue = function() {
             
-            /*if ( tokeninfo.user ) {
-                if ( tokeninfo.user.base ) {
+            req.user = null;
+            
+            if ( tokeninfo.user ) {
+                
+                // Save the user parameters to the configuration:
+                req.user = tokeninfo.user;
+                
+                /*if ( tokeninfo.user.base ) {
+                    config.base = tokeninfo.user.base;
                     // Adapt the config.base for each logged in user.
-                }
-            }*/
+                }*/
+            }
             
             return callback( true );
         }
@@ -298,8 +305,10 @@ var createItems = function ( req , res , path , files ) {
     
     var createItem = function (current, relpath, type, link) {
         
+        // console.log( 208 , relpath , relpath.replace(req.base,'').replace('//','/') );
+        
         var item = {
-            path: relpath.replace('//','/'),
+            path: relpath.replace(req.base,'').replace('//','/'),
             type: type,
             size: fs.lstatSync(current).size,
             atime: fs.lstatSync(current).atime.getTime(),
@@ -316,7 +325,7 @@ var createItems = function ( req , res , path , files ) {
         
         switch ( type ) {
             case 'directory':
-                var child = exec('ls --directory "' + config.base + item.path + '" | wc -l',function (err, stdout, stderr) {
+                var child = exec('ls --directory "' + req.base + item.path + '" | wc -l',function (err, stdout, stderr) {
                     if (err) throw err;
                     
                     item.directory = {
@@ -355,17 +364,24 @@ var createItems = function ( req , res , path , files ) {
             relpath = current.replace(config.base,"/");
             (fs.lstatSync(current).isSymbolicLink()) ? link = true : link = false;
             if ( !relpath.match(/\/\./) ) {
-                if ( req.params.tree ) {
-                    if (fs.lstatSync(current).isDirectory()) {
-                        output_dirs.push( relpath );
-                        // output_dirs[ relpath ] = {};
+                
+                // Check whether the user has access to this file:
+                var isFiltered = ( req.user.allow && null === current.match( new RegExp( req.user.allow , "i" ) ) );
+                
+                if ( !isFiltered ) {
+                
+                    if ( req.params.tree ) {
+                        if (fs.lstatSync(current).isDirectory()) {
+                            output_dirs.push( relpath );
+                            // output_dirs[ relpath ] = {};
+                        }
+                    } else if (fs.lstatSync(current).isDirectory()) {
+                        //output_dirs[files[i]] = createItem(current,relpath,"directory",link);
+                        output_dirs.push( createItem(current,relpath,"directory",link) );
+                    } else {
+                        //output_files[files[i]] = createItem(current,relpath,"file",link);
+                        output_files.push( createItem(current,relpath,"file",link) );
                     }
-                } else if (fs.lstatSync(current).isDirectory()) {
-                    //output_dirs[files[i]] = createItem(current,relpath,"directory",link);
-                    output_dirs.push( createItem(current,relpath,"directory",link) );
-                } else {
-                    //output_files[files[i]] = createItem(current,relpath,"file",link);
-                    output_files.push( createItem(current,relpath,"file",link) );
                 }
             }
         }
@@ -402,11 +418,18 @@ server.get(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
+        
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('GET') ) {
+            res.send(403);
+        }
+        
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
 
         // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ) );
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
         
-        //console.log( 295 , path );
+        // console.log( 295 , path );
         
         // console.log( req.params[1] );
         
@@ -630,7 +653,7 @@ server.get(commandRegEx, function (req, res, next) {
                                 // console.log( files[i] , files[i].match(/\.cover/) );
                                 if ( files[i].match(/\.cover/) ) {
                                     console.log('read from .cover');
-                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(config.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
+                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(req.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
                                     
                                     res.writeHead(302, {
                                       'Location': url,
@@ -1000,10 +1023,17 @@ server.post(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
         
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('POST') ) {
+            res.send(403);
+        }
+        
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
+    
         switch (req.params[1]) {
             
             // Creates a new directory
@@ -1093,10 +1123,17 @@ server.put(commandRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function(){
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
         
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('PUT') ) {
+            res.send(403);
+        }
+        
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
+    
         switch (req.params[1]) {
             
             // Rename a file or directory
@@ -1210,10 +1247,17 @@ server.del(pathRegEx, function (req, res, next) {
     
     // Check request
     checkReq(config, req, res, function() {
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[1] ));
         
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('DELETE') ) {
+            res.send(403);
+        }
+        
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[1] ) );
+    
         console.log( 'Removing: ' , path );
         
         // Make sure it exists

@@ -857,6 +857,8 @@ mesh
 
     $scope.servers = $rootScope.servers;
     
+    window.onkeypress = null;
+    
     if ( undefined === $scope.servers && !mesh._servers ) {
         
         meshio
@@ -875,8 +877,6 @@ mesh
     } else {
         $scope.servers = mesh._servers;
     }
-    
-    console.log( 568 , $scope.servers );
     
     $scope.save = function() {
         
