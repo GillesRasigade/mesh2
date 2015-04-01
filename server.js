@@ -305,7 +305,11 @@ var createItems = function ( req , res , path , files ) {
     
     var createItem = function (current, relpath, type, link) {
         
+<<<<<<< HEAD
         console.log( 208 , relpath , relpath.replace(req.base,'').replace('//','/') );
+=======
+        // console.log( 208 , relpath , relpath.replace(req.base,'').replace('//','/') );
+>>>>>>> 98169e04e02090573483262ebe2c045b60c33d97
         
         var item = {
             path: relpath.replace(req.base,'').replace('//','/'),
@@ -429,7 +433,11 @@ server.get(commandRegEx, function (req, res, next) {
         // Set path
         var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
         
+<<<<<<< HEAD
         console.log( 295 , path );
+=======
+        // console.log( 295 , path );
+>>>>>>> 98169e04e02090573483262ebe2c045b60c33d97
         
         // console.log( req.params[1] );
         

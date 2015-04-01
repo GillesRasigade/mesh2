@@ -863,8 +863,11 @@ mesh
 
     $scope.servers = $rootScope.servers;
     
+<<<<<<< HEAD
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
+=======
+>>>>>>> 98169e04e02090573483262ebe2c045b60c33d97
     window.onkeypress = null;
     
     if ( undefined === $scope.servers && !mesh._servers ) {
