@@ -57,7 +57,13 @@
                 
                 <input type="text" placeholder="Mesh² base: Photos/" class="form-control" id="server-{{ i }}-base" ng-model="server.base" value="{{ server.base }}"/>
                 
-                <button type="button" class="btn btn-link" ng-click="servers.splice(i,1);">Delete</button>
+                <br/>
+                <div class="directory-details" ng-bind-html="server.id | details:this"></div>
+                <br/>
+                
+                <div class="text-right">
+                    <button type="button" class="btn btn-danger btn-xs" ng-click="servers.splice(i,1);">Delete</button>
+                </div>
                 
             </div>
         </div>

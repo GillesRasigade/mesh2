@@ -862,6 +862,7 @@ mesh
     if ( !meshio.checkAuth() ) return $location.path('/logout');
 
     $scope.servers = $rootScope.servers;
+    $scope.statistics = {};
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
@@ -884,6 +885,34 @@ mesh
         
     } else {
         $scope.servers = mesh._servers;
+    }
+    
+    if ( $scope.servers ) {
+        angular.forEach($scope.servers,function(o,i){
+            
+            console.log( 89 , o , i );
+            
+            setTimeout(function(){
+                meshio
+                    .statistics( o.base , o.id )
+                    .then(function( data ){
+                        
+                        
+                        var stats = {};
+                        angular.forEach( data , function (p,j){
+                            angular.forEach( p , function(q,k){
+                                stats[k] = undefined === stats[k] ? q : stats[k] + q ;
+                            })
+                        })
+                        
+                        console.log( 896 , stats , data );
+                        $scope.statistics[o.id] = stats;
+                        
+                        try{ $scope.$digest(); } catch(e){}
+                        
+                    });
+            },50);
+        });
     }
     
     $scope.save = function() {
