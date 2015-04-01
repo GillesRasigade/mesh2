@@ -9,15 +9,17 @@
         "32": "images/favicon-32.png"
     },
     "app": {
-        "urls": [
-            "http://rasigade.fr/mesh2/index.html#/login"
-        ],
-        "launch": {
-            "web_url": "http://rasigade.fr/mesh2/index.html#/"
+        "background": {
+            "scripts": ["background.js"]
         }
     },
     "permissions": [
         "unlimitedStorage",
-        "notifications"
-    ]
+        "notifications",
+        "https://accounts.google.com/o/oauth2/token"
+    ],
+    "sandbox": {
+        "pages": ["index.html"]
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://apis.google.com/; object-src 'self'"
 }

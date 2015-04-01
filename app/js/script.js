@@ -41,7 +41,7 @@ var signinCallback = function (authResult) {
         gapi.client.load('oauth2', 'v2', function() {
             var request = gapi.client.oauth2.userinfo.get();
             request.execute(function(profile){
-                console.log( profile );
+                console.log( 44 , profile );
                 
                 mesh._profile = profile;
                 
@@ -73,19 +73,69 @@ var signinCallback = function (authResult) {
   }
 }
 
+window.storage = {
+    set: function ( item , value , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            var data = {};
+            data[item] = value;
+            chrome.storage.local.set(data);
+        } else {
+            localStorage.setItem(item,JSON.stringify(value));
+        }
+    },
+    get: function ( item , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            chrome.storage.local.get(item,callback)
+        } else {
+            var value = localStorage.getItem(item);
+            return callback( value ? JSON.parse(value) : null );
+        }
+    },
+    remove: function ( item , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            chrome.storage.local.remove(item,callback)
+        } else {
+            var value = localStorage.removeItem(item);
+            return callback();
+        }
+    }
+}
+
 // Save the auth data for reuse:
+var f = [
+    function() {
+        storage.getItem('auth',function(result){
+            mesh._auth = result;
+            console.log( 109 , result );
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('profile',function(result){
+            mesh._profile = result;
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('servers',function(result){
+            mesh._servers = result;
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('route',function(result){
+            window.location.hash = result;
+        })
+    },
+];
+// f[0]();
+
 mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
 
 mesh._servers = localStorage.getItem('servers');
 if ( !mesh._servers ) {
-    mesh._servers = null;
-    // mesh._servers = [
-    //     {
-    //         "id": "local",
-    //         "api": "http://localhost:8080/12345"
-    //     }
-    // ]
+    mesh._servers = [];
 } else {
     mesh._servers = JSON.parse( mesh._servers );
 }

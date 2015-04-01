@@ -124,6 +124,12 @@ mesh
     $scope.servers = mesh._servers;
     $scope.settings = settings;
     
+    // Redirect user if no servers is configured:
+    if ( !$scope.servers || !$scope.servers.length ) {
+        return $location.path('/servers');
+    }
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','visible');
     
     localStorage.setItem( 'route' , $route.current.params.path );
     
@@ -857,6 +863,10 @@ mesh
 
     $scope.servers = $rootScope.servers;
     
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    
+    window.onkeypress = null;
+    
     if ( undefined === $scope.servers && !mesh._servers ) {
         
         meshio
@@ -875,8 +885,6 @@ mesh
     } else {
         $scope.servers = mesh._servers;
     }
-    
-    console.log( 568 , $scope.servers );
     
     $scope.save = function() {
         
