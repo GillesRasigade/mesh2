@@ -866,6 +866,8 @@ mesh
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
+    localStorage.setItem( 'route' , 'servers' );
+    
     window.onkeypress = null;
     
     if ( undefined === $scope.servers && !mesh._servers ) {
@@ -911,7 +913,7 @@ mesh
                         try{ $scope.$digest(); } catch(e){}
                         
                     });
-            },50);
+            },250);
         });
     }
     
