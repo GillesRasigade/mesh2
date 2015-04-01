@@ -42,7 +42,7 @@
     
     <div ng-repeat="(i,server) in servers track by $index" class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
     
-        <div class="directory-inner thumbnail" title="{{ folder.path | rm:path }}">
+        <div class="directory-inner thumbnail" title="{{ server.id }}">
             <a href="#/{{ server.id }}/{{ server.base ? server.base : '' }}">
                 <div class="directory-thumb-background">
                     <div class="directory-thumb" style="background-image: url('{{ '/' + (server.base ? server.base : '') | thumb:500:500 | server:server.id }}');"></div>

@@ -475,7 +475,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 }
 
 .directory-thumb-background {
-    background-color: black;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+}
+
+#servers-list .directory-thumb-background {
+    background-image: url('../images/offline.png');
+}
+
+#servers-list .directory:hover .directory-thumb {
+    opacity: 1;
 }
 
 .directory-thumb {
@@ -483,7 +493,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
     padding-bottom: 80%;
     background-size: cover;
     background-position: center center;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .directory-inner.thumbnail .glyphicon-exclamation-sign {

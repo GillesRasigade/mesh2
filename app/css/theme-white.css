@@ -63,7 +63,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 .video.thumb,
 .image-thumb,
 .directory-thumb {
-    background-color: #eee;
+    background-color: transparent;
 }
 
 .directory-name { color: #666; }
