@@ -429,8 +429,6 @@ server.get(commandRegEx, function (req, res, next) {
         // Set path
         var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
         
-        console.log( 295 , path );
-        
         // console.log( req.params[1] );
         
         switch (req.params[1]) {
@@ -567,11 +565,12 @@ server.get(commandRegEx, function (req, res, next) {
                 switch ( type ) {
                     case 'directory':
                         
-                        var stats = {};
-                        
                         fs.readdir(path, function (err, files) {
-                            if ( err ) throw err;
+                            if ( err ) { console.error( err ); throw err; }
                             
+                            req.stats = {};
+                            console.log( 576 , path , 'reset stats' );
+                        
                             // Sort alphabetically
                             files.sort();
                             
@@ -579,34 +578,43 @@ server.get(commandRegEx, function (req, res, next) {
                             // 1. Directories
                             // 2. Files
                             var f = function(){
+                                console.log( 585 , files.length );
                                 if ( files.length ) {
                                     file = files.shift();
                                     current = (path + '/' + file).replace(/\/+/g,'/');
                                     if ( !current.match(/\/\./) ) {
                                         if (fs.lstatSync(current).isDirectory()) {
                                             
-                                            stats[file] = {};
+                                            req.stats[file] = {};
+                                                console.log( 'd' , file , req.stats[file] );
                                             
                                             var cmd = 'cd "'+current+'"; find . -type d | wc -l';
                                             var child = exec(cmd,function (err, stdout, stderr) {
-                                                if (err) throw err;
+                                                if ( err ) { console.error( err ); throw err; }
                                                 
-                                                stats[file].directories = parseInt( stdout , 10 ) - 1;
+                                                console.log( 'd' , req.stats , file , req.stats[file] );
+                                                req.stats[file].directories = parseInt( stdout , 10 ) - 1;
                                                 
                                                 var cmd = 'cd "'+current+'"; find . -type f -regextype posix-egrep -iregex ".*'+config.types.image+'" | wc -l';
                                                 var child = exec(cmd,function (err, stdout, stderr) {
-                                                    if (err) throw err;
-                                                    stats[file].images =parseInt( stdout , 10 );
+                                                    if ( err ) { console.error( err ); throw err; }
+                                                    
+                                                    console.log( 'i' , file , req.stats , req.stats[file] );
+                                                    req.stats[file].images =parseInt( stdout , 10 );
                                                     
                                                     var cmd = 'cd "'+current+'"; find . -type f -regextype posix-egrep -iregex ".*'+config.types.video+'" | wc -l';
                                                     var child = exec(cmd,function (err, stdout, stderr) {
-                                                        if (err) throw err;
-                                                        stats[file].videos =parseInt( stdout , 10 );
+                                                        if ( err ) { console.error( err ); throw err; }
+                                                        
+                                                        console.log( 'v' , file , req.stats , req.stats[file] );
+                                                        req.stats[file].videos =parseInt( stdout , 10 );
                                                         
                                                         var cmd = 'cd "'+current+'"'+"; du | tail -1 | sed 's/\t\.*$//'";
                                                         var child = exec(cmd,function (err, stdout, stderr) {
-                                                            if (err) throw err;
-                                                            stats[file].size =parseInt( stdout , 10 );
+                                                            if ( err ) { console.error( err ); throw err; }
+                                                            
+                                                            console.log( 'f' , req.stats[file] );
+                                                            req.stats[file].size =parseInt( stdout , 10 );
                                                             f();
                                                         });
                                                     });
@@ -617,7 +625,7 @@ server.get(commandRegEx, function (req, res, next) {
                                     } else f();
                                 } else {
                                     // Send output
-                                    resSuccess(stats, res);
+                                    resSuccess(req.stats, res);
                                 }
                             }; f();
                             
