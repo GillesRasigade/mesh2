@@ -133,6 +133,7 @@ var f = [
 mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
 
+
 mesh._servers = localStorage.getItem('servers');
 if ( !mesh._servers ) {
     mesh._servers = [];
@@ -140,6 +141,8 @@ if ( !mesh._servers ) {
     mesh._servers = JSON.parse( mesh._servers );
 }
 
-if ( localStorage.getItem( 'route' ) ) {
-    window.location.hash = localStorage.getItem( 'route' );
+if ( !window.location.hash.match('/\?/') ) {
+    if ( localStorage.getItem( 'route' ) ) {
+        window.location.hash = localStorage.getItem( 'route' );
+    }
 }

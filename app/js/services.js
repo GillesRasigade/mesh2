@@ -353,6 +353,36 @@ mesh
         })
     }
     
+    this.getSharedObject = function ( $location ) {
+        
+        var object = null;
+        var search = $location.search();
+        if ( search ) {
+            // Get the share object:
+            // var share = search.replace( /.*share=([^&$]*).*/ , '$1' );
+            var share = search.share;
+            
+            if ( share ) {
+                try {
+                    object = JSON.parse( atob( share ) );
+                } catch ( e ) {}
+                
+                delete search.share;
+                $location.search( search );
+            }
+        }
+        
+        // Remove the search part:
+        // window.history.pushState( 'reload' , 'Mesh²' , window.location.href.replace(/\?[^#]*/,'') );
+        // setTimeout(function(){
+        //     // window.history.pushState('page2', 'Title', window.location.href.replace(/\?[^#]*/,''));
+            // var url = window.location.href.replace(/\?[^#]*/,'');
+            // window.history.pushState({path:url},'', url);
+        // },1000);
+        
+        return object;
+    }
+    
 })
 
 .factory("settings",function(){

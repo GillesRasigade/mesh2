@@ -25,7 +25,8 @@ mesh
     })
     .when('/servers', {
         controller:'ServersController',
-        templateUrl:'partials/servers.html'
+        templateUrl:'partials/servers.html',
+        reloadOnSearch: false
     })
     .when('/:path*?', {
         controller:'ListController',
@@ -47,6 +48,8 @@ mesh
 // http://stackoverflow.com/questions/11541695/redirecting-to-a-certain-route-based-on-condition
 .controller('LogoutController', ['$scope','$location', function($scope,$location) {
     console.log( 'logout' )
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
     // Remove user authentication data:
     delete mesh._auth;
@@ -72,7 +75,9 @@ mesh
     //$location.path( '/login' );
 }])
 .controller('LoginController', ['$scope','$location', function($scope,$location) {
-    console.log( 'login' )
+    console.log( 'login' , $location.search() )
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
     if ( window.gapi ) {
         setTimeout(function(){
@@ -131,7 +136,9 @@ mesh
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','visible');
     
-    localStorage.setItem( 'route' , $route.current.params.path );
+    if ( $route.current.params.path ) {
+        localStorage.setItem( 'route' , $route.current.params.path );
+    }
     
     $scope.search = function() {
         var delay = 500;
@@ -857,16 +864,29 @@ mesh
     $scope.tree();
 }])
 
-.controller('ServersController', ['$scope','$rootScope','$location','meshio', function($scope,$rootScope,$location,meshio) {
+.controller('ServersController', ['$scope','$rootScope','$location','$route','meshio', function($scope,$rootScope,$location,$route,meshio) {
 
     if ( !meshio.checkAuth() ) return $location.path('/logout');
+    console.log( 899 , $location.absUrl() , $location.search() );
+
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
 
     $scope.servers = $rootScope.servers;
     $scope.statistics = {};
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     
-    localStorage.setItem( 'route' , 'servers' );
+    localStorage.setItem( 'route' , '/servers' );
     
     window.onkeypress = null;
     
@@ -888,6 +908,8 @@ mesh
     } else {
         $scope.servers = mesh._servers;
     }
+    
+    
     
     if ( $scope.servers ) {
         angular.forEach($scope.servers,function(o,i){
@@ -917,6 +939,15 @@ mesh
         });
     }
     
+    $scope.remove = function ( i ) {
+        if ( confirm('Sure ?') ) {
+            $scope.servers.splice(i,1);
+            $scope.save();
+            
+            try{ $scope.$digest(); } catch(e){}
+        }
+    }
+    
     $scope.save = function() {
         
         console.log( $scope.servers );
@@ -925,6 +956,14 @@ mesh
         
         localStorage.setItem( 'servers' , JSON.stringify( mesh._servers ) );
         
+    }
+    
+    if ( window.location.hash.match('/\?/') ) {
+        var sharedServer = meshio.getSharedObject( $location );
+        if ( sharedServer ) {
+            $scope.servers.push( sharedServer );
+            $scope.save();
+        }
     }
     
 }])

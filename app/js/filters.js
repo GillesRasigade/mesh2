@@ -133,3 +133,19 @@ mesh
         return path.match('-star.') ? 'starred' : '';
     }
 })
+
+.filter('share', function(){
+    return function ( object , type ) {
+        
+        var resource = '';
+        // console.log(141,type,object);
+        
+        switch ( type ) {
+            case 'server':
+                resource = btoa( JSON.stringify( object ) );
+                break;
+        }
+        var url = window.location.href;
+        return url.replace( /#(.*)$/ , '#$1?share=' + resource );
+    }
+})
