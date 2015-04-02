@@ -53,6 +53,8 @@ var signinCallback = function (authResult) {
         // redirect to the last opened folder or servers list:
         if ( localStorage.getItem( 'route' ) ) {
             window.location.hash = localStorage.getItem( 'route' );
+        } else if ( window.location.hash ) {
+            window.location.hash = window.location.hash.replace(/#\/[^?]*/,'#/servers');
         } else {
             window.location.hash = '#/servers';
         }
