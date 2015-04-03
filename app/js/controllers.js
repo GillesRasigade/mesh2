@@ -129,6 +129,8 @@ mesh
     $scope.servers = mesh._servers;
     $scope.settings = settings;
     
+    console.log( '132 path:' , path );
+    
     // Redirect user if no servers is configured:
     if ( !$scope.servers || !$scope.servers.length ) {
         return $location.path('/servers');
