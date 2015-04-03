@@ -19,9 +19,9 @@ mesh
         controller:'LoginController',
         templateUrl:'partials/login.html'
     })
-    .when('/about', {
-        controller:'AboutController',
-        templateUrl:'partials/about.html'
+    .when('/doc', {
+        controller:'DocumentationController',
+        templateUrl:'partials/doc.html'
     })
     .when('/servers', {
         controller:'ServersController',
@@ -50,25 +50,29 @@ mesh
     console.log( 'logout' )
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
     
-    // Remove user authentication data:
-    delete mesh._auth;
-    localStorage.removeItem('auth');
+    if ( !mesh._offline ) {
     
-    // User profile removing:
-    delete mesh._profile;
-    localStorage.removeItem('profile');
-    document.getElementById('signin').innerHTML = '<signin></signin>';
-    
-    // Action on google api:
-    if ( window.gapi ) {
-        if ( gapi.auth ) {
-            gapi.auth.signOut();
-        }
+        // Remove user authentication data:
+        delete mesh._auth;
+        localStorage.removeItem('auth');
         
-        setTimeout(function(){
-            gapi.signin.go('signinButton')
-        },250);
+        // User profile removing:
+        delete mesh._profile;
+        localStorage.removeItem('profile');
+        document.getElementById('signin').innerHTML = '<signin></signin>';
+        
+        // Action on google api:
+        if ( window.gapi ) {
+            if ( gapi.auth ) {
+                gapi.auth.signOut();
+            }
+            
+            setTimeout(function(){
+                gapi.signin.go('signinButton')
+            },250);
+        }
     }
     
     // Redirection to the login page:
@@ -78,6 +82,7 @@ mesh
     console.log( 'login' , $location.search() )
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
     
     if ( window.gapi ) {
         setTimeout(function(){
@@ -99,7 +104,7 @@ mesh
     
     // Require the user to be logged in:
     // if ( undefined === mesh._auth ) $location.path('/logout');
-    if ( !meshio.checkAuth() ) return $location.path('/logout');
+    if ( !mesh._offline && !meshio.checkAuth() ) return $location.path('/logout');
     
     // Application path definition:
     var path = '/';
@@ -137,6 +142,7 @@ mesh
     }
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','visible');
+    angular.element( document.getElementById('s') ).css('visibility','visible');
     
     if ( $route.current.params.path ) {
         localStorage.setItem( 'route' , $route.current.params.path );
@@ -318,6 +324,9 @@ mesh
                                     });
                             },50);
                         }
+                    }, function(){
+                        $scope.busy = false;
+                        try{ $scope.$digest(); } catch(e){}
                     })
             }
         } else {
@@ -868,7 +877,7 @@ mesh
 
 .controller('ServersController', ['$scope','$rootScope','$location','$route','meshio', function($scope,$rootScope,$location,$route,meshio) {
 
-    if ( !meshio.checkAuth() ) return $location.path('/logout');
+    if ( !mesh._offline && !meshio.checkAuth() ) return $location.path('/logout');
     console.log( 899 , $location.absUrl() , $location.search() );
 
     var original = $location.path;
@@ -887,6 +896,7 @@ mesh
     $scope.statistics = {};
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
     
     localStorage.setItem( 'route' , '/servers' );
     

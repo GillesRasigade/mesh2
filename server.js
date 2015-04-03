@@ -127,6 +127,7 @@ var checkIP = function (config, req) {
 var checkToken = function ( req, callback , error ) {
     // REF: http://stackoverflow.com/questions/12296017/how-to-validate-a-oauth2-0-access-token-for-a-resource-server
     // Request: https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=1/fFBGRNJru1FQd44AzqT3Zg
+    console.log( "checkToken" , req.params.access_token );
     if ( req.params.access_token ) {
         
         var cache = require('memory-cache');
@@ -193,6 +194,19 @@ var checkToken = function ( req, callback , error ) {
         }
             
         return true;
+        
+    } else {
+        
+        console.log( 205 , req.connection.remoteAddress )
+        
+        if ( false && req.connection.remoteAddress.match(/127\.0\.\d+\.\d+/) ) {
+        
+            // Save the user parameters to the configuration:
+            req.user = config.users['gilles.rasigade@gmail.com'];
+                
+            return callback( true );
+            
+        }
     }
     
     return error();

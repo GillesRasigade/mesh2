@@ -31,7 +31,12 @@ mesh
     
     this.request = function ( config ) {
         
-        if ( !mesh._auth ) return window.location.hash = '#/login';
+        if ( !mesh._offline && !mesh._auth ) return window.location.hash = '#/login';
+    
+        if ( false && mesh._offline ) {
+            console.log( 'Service request offline' );
+            return ( null );
+        }
     
         // Parameter initialization:
         config = config ? config : {};
@@ -50,8 +55,10 @@ mesh
         
         // config.url = this.url ( config );
         
-        config.params.access_token = mesh._auth.access_token;
-    
+        if ( mesh._auth ) {
+            config.params.access_token = mesh._auth.access_token;
+        }
+        
         // Perform the request:
         var request = $http(config);
 

@@ -8,6 +8,15 @@ var mesh = angular.module('mesh', ['components','ngResource','ngRoute','ngSaniti
 
 var serverKey = '12345';
 
+mesh._offline = false;
+// window.onoffline = function(){
+//     mesh._offline = true;
+// }
+// window.ononline = function(){
+//     // mesh._offline = false;
+// }
+
+
 
 /*mesh._auth = {};
 mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJYa7cAVUk";*/

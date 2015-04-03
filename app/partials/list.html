@@ -23,6 +23,15 @@
     <div id="upload-progress"></div>
 </div>
 
+
+<div ng-if="busy" id="loading-message" class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            Loading...
+        </div>
+    </div>
+</div>
+
 <div id="list" when-scrolled="load(true)">
 
 <!--p>{{ (folders|type:'directory').length }} folders and {{ (folders|type:'file').length }} </p-->

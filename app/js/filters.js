@@ -86,7 +86,7 @@ mesh
             url += '/thumb/' + escape( path ) + '/?';
         }
         
-        url += '&access_token=' + mesh._auth.access_token;
+        url += '&access_token=' + ( mesh._offline ? '' : mesh._auth.access_token );
             
         return url;
         
