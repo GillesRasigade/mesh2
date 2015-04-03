@@ -308,7 +308,7 @@ var createItems = function ( req , res , path , files ) {
         console.log( 208 , relpath , relpath.replace(req.base,'').replace('//','/') );
         
         var item = {
-            path: relpath.replace(req.base,'').replace('//','/'),
+            path: relpath.replace(req.base,'').replace(/\/+/,'/'),
             type: type,
             size: fs.lstatSync(current).size,
             atime: fs.lstatSync(current).atime.getTime(),
