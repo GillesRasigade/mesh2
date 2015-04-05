@@ -23,9 +23,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 }
 
 .navbar.footer {
-    background: #eee;
-    border-top: 1px solid #ddd;
-    color: #888;
+    display: none;
+    background: rgba(255,255,255,0.75);
+    border-top: 1px solid rgba(232,232,232,0.75);
+    color: #333;
     min-height: 20px;
     text-align: center;
 }

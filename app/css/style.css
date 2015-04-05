@@ -36,12 +36,12 @@ body {
 #loading-message {
     position: fixed;
     bottom: 0px;
-    padding: 15px 15px 35px 15px;
+    padding: 15px 15px 15px 15px;
     font-size: 1.2em;
     color: #666;
     text-align: center;
     width: 100%;
-    z-index: 9999;
+    z-index: 999;
     background-color: rgba(192,192,192,0.25);
 
     -webkit-transition-delay: 1s;
@@ -273,40 +273,40 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
     position: fixed;
     z-index: 9998;
     background-color: #888;
-    bottom: 0em;
-    right: 0em;
+    bottom: 30px;
+    right: 40px;
     border-radius: 100%;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     text-align: center;
-    line-height: 80px;
-    font-size: 58px;
+    line-height: 60px;
+    font-size: 33px;
     color: white;
     cursor: pointer;
     transition: background-color ease-in-out 0.1s;
-    border: 10px solid rgba(238,238,238,1);
+    border: 1px solid #777;
     overflow: hidden;
+    box-shadow: 1px 2px 5px #666;
 }
 .round-action.left {
     right: auto;
-    left 0.5em;
+    left: 40px;
 }
 #add-files.dragover,
 .round-action:hover {
-    background-color: red;
+    background-color: #d00;
+    border-color: #a00;
+    box-shadow: 1px 2px 5px #600;
 }
 
 @media (min-width: 0px) and (max-width: 991px) {
   .round-action {
-    bottom: -0.3em;
-    right: -0.3em;
-    border-width: 0px;
-    width: 80px; height: 80px;
-    opacity: 0.75;
+    bottom: -10px;
+    right: -10px;
   }
   .round-action.left {
     right: auto;
-    left: -0.3em;
+    left: -10px;
   }
   .round-action:hover {
       opacity: 1;
