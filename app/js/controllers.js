@@ -183,10 +183,19 @@ mesh
     }
     
     $s.off('keyup').on('keyup',function(event){
-        console.log( 164 , event.target.value );
-        $scope.s = event.target.value;
-        try{ $scope.$digest(); } catch(e){}
-        $scope.search();
+        
+        var charCode = event.which || event.keyCode;
+        var charStr = String.fromCharCode(charCode);
+        
+        if (charCode == 27) {
+            event.target.value = '';
+        }
+        
+        if ( charCode == 27 || /[a-z0-9]/i.test(charStr)) {
+            $scope.s = event.target.value;
+            try{ $scope.$digest(); } catch(e){}
+            $scope.search();
+        }
     })
     
     $scope.breadcrumb = function() {
