@@ -9,17 +9,15 @@
         "32": "images/favicon-32.png"
     },
     "app": {
-        "background": {
-            "scripts": ["background.js"]
+        "urls": [
+            "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html"
+        ],
+        "launch": {
+            "web_url": "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html#/servers"
         }
     },
     "permissions": [
         "unlimitedStorage",
-        "notifications",
-        "https://accounts.google.com/o/oauth2/token"
-    ],
-    "sandbox": {
-        "pages": ["index.html"]
-    },
-    "content_security_policy": "script-src 'self' 'unsafe-eval' https://apis.google.com/; object-src 'self'"
+        "notifications"
+    ]
 }
