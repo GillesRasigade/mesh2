@@ -18,8 +18,8 @@ mesh._offline = false;
 
 
 
-/*mesh._auth = {};
-mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJYa7cAVUk";*/
+// mesh._auth = {};
+// mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJYa7cAVUk";
 
 // Google OAuth2 authentication callback
 (function() {
@@ -143,7 +143,6 @@ var f = [
 
 mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
-
 
 mesh._servers = localStorage.getItem('servers');
 if ( !mesh._servers ) {

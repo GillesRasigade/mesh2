@@ -151,7 +151,7 @@ var checkToken = function ( req, callback , error ) {
         }
         
         var tokeninfo = cache.get('access_token:' + req.params.access_token);
-        //console.log( 146 , tokeninfo );
+        console.log( 146 , tokeninfo );
         if ( tokeninfo && tokeninfo.removeAddress === req.connection.remoteAddress ) {
             return _continue();
             
