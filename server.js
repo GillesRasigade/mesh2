@@ -450,7 +450,7 @@ server.get(commandRegEx, function (req, res, next) {
             // Route for the users which need to accept self-signed certificate:
             case 'accept-certificate':
                 res.setHeader('Content-type', "text/html");
-                return res.end('<html><body><script type="text/javascript">window.opener.location.reload(); setTimeout(window.close,1000);</script></body></html>');
+                return res.end('<html><body><script type="text/javascript">window.close();</script></body></html>');
                 break;
             
             case 'servers':
