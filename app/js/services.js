@@ -70,10 +70,30 @@ mesh
             // Return the
             return( response.data.data );
             
-        }, function(response){              // ERROR
+        }, function(response,status){              // ERROR
             
             if ( 401 === response.status ) {
                 return window.location.hash = '#/logout';
+            }
+            
+            console.log(79,response.status,config);
+            if ( 0 === response.status ) {
+                $http.get( config.url ).
+                  success(function(data, status, headers) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                  }).
+                  error(function(data, status, headers) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    // console.log( 88 , data , status , headers , config );
+                    if ( status === response.status ) {
+                        if ( confirm('To access the server "'+config.server+'", you are requested to accept the self-signed certificate.\n\n Do you want to proceed right now ?') ) {
+                            // window.location = config.url;
+                            window.open(config.url,'Certificate acceptance');
+                        }
+                    }
+                });
             }
             
             // The API response from the server should be returned in a

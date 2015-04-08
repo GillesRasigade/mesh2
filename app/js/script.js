@@ -30,6 +30,8 @@ mesh._offline = false;
 
 var signinCallback = function (authResult) {
     
+    // console.log(33,authResult);
+    
   if (authResult['status']['signed_in']) {
     // Update the app to reflect a signed in user
     // Hide the sign-in button now that the user is authorized, for example:
