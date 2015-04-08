@@ -88,9 +88,9 @@ mesh
                     // or server returns response with an error status.
                     // console.log( 88 , data , status , headers , config );
                     if ( status === response.status ) {
-                        if ( confirm('To access the server "'+config.server+'", you are requested to accept the self-signed certificate.\n\nThis action is required only one time and you must understand the risks and trust the source.\n\n Do you want to proceed right now ?') ) {
+                        if ( confirm('To access the server "'+config.server+'", you are requested to accept the self-signed certificate located here:\n\n> '+url+'\n\nThis action is required only one time and you must understand the risks and trust the source.\n\n Do you want to proceed right now ?') ) {
                             // window.location = config.url;
-                            window.open(config.url,'Certificate acceptance');
+                            window.open(url+'/accept-certificate/?&access_token=' + mesh._auth.access_token,'Certificate acceptance');
                         }
                     }
                 });
