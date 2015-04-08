@@ -76,8 +76,8 @@ mesh
                 return window.location.hash = '#/logout';
             }
             
-            console.log(79,response.status,config);
-            if ( 0 === response.status ) {
+            // console.log(79,response.status,config);
+            if ( false && 0 === response.status ) {
                 $http.get( config.url ).
                   success(function(data, status, headers) {
                     // this callback will be called asynchronously
