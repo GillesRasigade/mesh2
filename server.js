@@ -447,8 +447,27 @@ server.get(commandRegEx, function (req, res, next) {
         
         switch (req.params[1]) {
             
+            case 'certificate':
+                
+                // Check HTTPS activation:
+                if (config.ssl.key && config.ssl.cert) {
+                    
+                    res.setHeader('Content-disposition', 'attachment; filename=certificate.crt');
+                    res.setHeader('Content-type', 'application/x-x509-ca-cert');
+                    
+                    
+                    // Read certificate:
+                    var certificate = fs.readFileSync(config.ssl.cert);
+                    res.send( certificate );
+                    
+                }
+                return res.end();
+                break;
+            
             // Route for the users which need to accept self-signed certificate:
             case 'accept-certificate':
+                
+                
                 res.setHeader('Content-type', "text/html");
                 return res.end('<html><body><script type="text/javascript">window.close();</script></body></html>');
                 break;

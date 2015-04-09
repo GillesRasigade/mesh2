@@ -1,5 +1,9 @@
 <div class="container" id="doc">
 
+    <ul>
+        <li><a href="#/doc#howto">Howto</a></li>
+    </ul>
+
     <h1>Mesh²</h1>
     
     <p>Mesh² is an open-source application for managing pcitures, videos and any other file, remotely without having to install any software.</p>
@@ -39,7 +43,37 @@
     
     <h3>Videos</h3>
     
+    <ul>
+        <li>Live streaming of basic videos formats.</li>
+    </ul>
     
+    <h2 id="howto"><br/><br/>Howto</h2>
+    
+    <h3 id="howto-add-server">How to add a new server</h3>
+    
+    <ol>
+        <li>Go to the <a href="#/servers">servers</a> configuration page.</li>
+        <li>Click on the <b>New</b> button.</li>
+        <li>Fill in the server name, URL and base path.</li>
+        <li>Check that the server is accessible by clicking on the badge.</li>
+        <li>Don't forget to save your servers' list if everything looks good!</li>
+    </ol>
+    
+    <div class="bs-callout bs-callout-warning">
+        <h4>About HTTPS</h4>
+        <p>Servers secured by SSL are requiring the user (you!) to accept certificates to authenticate communications between MESH and the server.</p>
+        <p>For self-signed certificates, you have to manually import them in your browser to navigate through the server. On the server badge, click on
+        the icon <i class="fa fa-certificate"></i> to download the certificate then import it:<br/>
+        <code>preferences -> certificates -> import</code>.</p>
+    </div>
+    
+    <h3 id="howto-share-server">How to share a server</h3>
+    
+    <ol>
+        <li>Go to the <a href="#/servers">servers</a> configuration page.</li>
+        <li>Right click on the share icon <i class="fa fa-share-alt"></i> and copy the link.</li>
+        <li>Send it</li>
+    </ol>
     
     <h2 id="faq">FAQ</h2>
 
@@ -61,7 +95,6 @@
           <p>The difference is that your files are stored on a server where files can be automatically backed up and where your most beautiful pictures are accessible from any device connected to the Internet.</p>
       </dd>
       
-      
     </dl>
     
     <h2 id="about">About</h2>
@@ -70,6 +103,8 @@
     
     <h2 id="privacy">Security and privacy</h2>
     
-    <p>Security and privacy</p>
+    <p>MESH is an open-source private software: no cookie, no tracking, nothing except OAuth 2.0 security layer.</p>
+    
+    
 
 </div> <!-- /container -->

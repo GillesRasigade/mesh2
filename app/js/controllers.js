@@ -903,6 +903,7 @@ mesh
 
     $scope.servers = $rootScope.servers;
     $scope.statistics = {};
+    $scope.mesh = mesh;
     
     angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
     angular.element( document.getElementById('s') ).css('visibility','hidden');
@@ -961,7 +962,7 @@ mesh
     }
     
     $scope.remove = function ( i ) {
-        if ( confirm('Sure ?') ) {
+        if ( confirm('Remove this server ?') ) {
             $scope.servers.splice(i,1);
             $scope.save();
             

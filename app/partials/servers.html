@@ -58,13 +58,16 @@
                 <input type="text" placeholder="Mesh² base: Photos/" class="form-control" id="server-{{ i }}-base" ng-model="server.base" value="{{ server.base }}"/>
                 
                 <br/>
-                <div class="directory-details" ng-bind-html="server.id | details:this"></div>
-                <br/>
                 
                 <div class="text-right">
-                    <button type="button" class="btn btn-link btn-xs"><a target="_blank" class="text-info" href="{{ server | share:'server' }}">Share</a></button>
+                    <div class="directory-details" ng-bind-html="server.id | details:this"></div>
+                    <br/>
+                    <button type="button" class="btn btn-link btn-xs"><a target="_blank" class="text-info" href="{{ server | share:'server' }}"><i class="fa fa-share-alt"></i></a></button>
+                    <button ng-if="'https' == server.api.substr(0,5)" type="button" class="btn btn-link btn-xs"><a href="{{ server.api + '/certificate/?&access_token=' + mesh._auth.access_token }}" target="_self"><i class="fa fa-certificate"></i></a></button>
+
                     <button type="button" class="btn btn-danger btn-xs" ng-click="remove(i);">Delete</button>
                 </div>
+                
                 
             </div>
         </div>

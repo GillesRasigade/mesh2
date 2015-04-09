@@ -29,8 +29,29 @@ body {
     display: inline-block;
 }
 
-#about {
+#doc {
     background-color: white;
+    border: 1px solid #ccc;
+}
+
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+.bs-callout.bs-callout-warning {
+    border-color: #ce4844;
+}
+.bs-callout.bs-callout-warning h4 {
+    color: #ce4844;
+}
+
+#doc h2 {
+    display: block;
+    margin-top: 200px;
+    border-bottom: 1px solid #ddd;
 }
 
 #loading-message {
