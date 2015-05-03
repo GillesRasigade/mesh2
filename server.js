@@ -375,7 +375,7 @@ var createItems = function ( req , res , path , files ) {
     for (var i=0, z=files.length-1; i<=z; i++) {
         if ( files[i] ) {
             current = path + files[i];
-            relpath = current.replace(config.base,"/");
+            relpath = current.replace( req.user && req.user.base ? req.user.base : config.base ,"/");
             (fs.lstatSync(current).isSymbolicLink()) ? link = true : link = false;
             if ( !relpath.match(/\/\./) ) {
                 
@@ -717,12 +717,12 @@ server.get(commandRegEx, function (req, res, next) {
                                     
                                     // console.log( 614 , path.replace(config.base,'') + '/' +files[i] );
                                     // Copy the file to the directory temporary folder:
-                                    var absolute = path.replace(config.base,'') + '/' +files[i];
+                                    var absolute = path.replace(base,'') + '/' +files[i];
                                     var cover = absolute.replace(/\/[^\/]*(\.[^\.]+)$/,'/.cover$1');
  
                                     // console.log( 619 , config.base+absolute, config.base+cover );
                                         
-                                    fs.copy(config.base+absolute, config.base+cover, function(err){
+                                    fs.copy(base+absolute, base+cover, function(err){
                                         if (err) throw err;
                                         
                                         var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=300&h=300&access_token='+req.query['access_token'];
@@ -747,7 +747,7 @@ server.get(commandRegEx, function (req, res, next) {
                                 if ( i < files.length ) {
                                     
                                     current = (path + files[i]).replace(/\/+/,'/');
-                                    relpath = current.replace(config.base,"");
+                                    relpath = current.replace(base,"");
                                     
                                     i++;
                                     
@@ -859,7 +859,7 @@ server.get(commandRegEx, function (req, res, next) {
      	        if ( _config.width || _config.height ) {
      	            
      	            // Temporary image name:
-     	            var tmp = ( config.tmp + '/' + dirname.replace(config.base,'') + '/' + basename +
+     	            var tmp = ( config.tmp + '/' + dirname.replace(base,'') + '/' + basename +
                         ( _config.width ? '-w='+_config.width : '' ) +
                         ( _config.height ? '-h='+_config.height : '' ) +
                         '.'+extension ).replace(/\/+/g,'/');
@@ -1133,7 +1133,7 @@ server.post(commandRegEx, function (req, res, next) {
             // Supply destination as full path with file or folder name at end
             // Ex: http://yourserver.com/{key}/copy/folder_a/somefile.txt, destination: /folder_b/somefile.txt
             case "copy":
-                var destination = config.base + "/" + req.params.destination;
+                var destination = base + "/" + req.params.destination;
                 if (checkPath(path) && checkPath(destination)) {
                     fs.copy(path, destination, function(err){
                         if (err) {
@@ -1260,13 +1260,13 @@ server.put(commandRegEx, function (req, res, next) {
             
             case "cover":
                 // Make sure it exists
-                if (fs.existsSync(path) && fs.existsSync(config.base +'/'+req.params.target) ) {
+                if (fs.existsSync(path) && fs.existsSync(base +'/'+req.params.target) ) {
                     var cover = req.params.target + '/' + decodeURIComponent( unescape( path.replace(/^.*\/[^\/]*(\.[^\.]+)$/,'.cover$1')));
                     
                     
-                    console.log( 'cover copy' , path, config.base+'/'+cover );
+                    console.log( 'cover copy' , path, base+'/'+cover );
                     
-                    fs.copy( path, config.base+'/'+cover, function(err){
+                    fs.copy( path, base+'/'+cover, function(err){
                         if(err)throw err;
                         // console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ ') );
                         var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ '),function (err, stdout, stderr) {});
