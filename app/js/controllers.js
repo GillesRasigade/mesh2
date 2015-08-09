@@ -886,6 +886,7 @@ mesh
     // headroom.js initialization:
     var scroller = document.querySelector("#list");
     Headroom.options.scroller = scroller;
+    
     var myElement = document.querySelector(".navbar-fixed-top");
     var headroom  = new Headroom(myElement);
     headroom.init();
