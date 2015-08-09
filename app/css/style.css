@@ -29,9 +29,47 @@ body {
     display: inline-block;
 }
 
-#about {
+#doc {
     background-color: white;
+    border: 1px solid #ccc;
 }
+
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+.bs-callout.bs-callout-warning {
+    border-color: #ce4844;
+}
+.bs-callout.bs-callout-warning h4 {
+    color: #ce4844;
+}
+
+#doc h2 {
+    display: block;
+    margin-top: 200px;
+    border-bottom: 1px solid #ddd;
+}
+
+#loading-message {
+    position: fixed;
+    bottom: 0px;
+    padding: 15px 15px 15px 15px;
+    font-size: 1.2em;
+    color: #666;
+    text-align: center;
+    width: 100%;
+    z-index: 999;
+    background-color: rgba(192,192,192,0.25);
+
+    -webkit-transition-delay: 1s;
+    transition-delay: 1s;
+}
+
+
 
 .navbar.header {
     background-color: #ddd;
@@ -256,40 +294,40 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
     position: fixed;
     z-index: 9998;
     background-color: #888;
-    bottom: 0em;
-    right: 0em;
+    bottom: 30px;
+    right: 40px;
     border-radius: 100%;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     text-align: center;
-    line-height: 80px;
-    font-size: 58px;
+    line-height: 60px;
+    font-size: 33px;
     color: white;
     cursor: pointer;
     transition: background-color ease-in-out 0.1s;
-    border: 10px solid rgba(238,238,238,1);
+    border: 1px solid #777;
     overflow: hidden;
+    box-shadow: 1px 2px 5px #666;
 }
 .round-action.left {
     right: auto;
-    left 0.5em;
+    left: 40px;
 }
 #add-files.dragover,
 .round-action:hover {
-    background-color: red;
+    background-color: #d00;
+    border-color: #a00;
+    box-shadow: 1px 2px 5px #600;
 }
 
 @media (min-width: 0px) and (max-width: 991px) {
   .round-action {
-    bottom: -0.3em;
-    right: -0.3em;
-    border-width: 0px;
-    width: 80px; height: 80px;
-    opacity: 0.75;
+    bottom: -10px;
+    right: -10px;
   }
   .round-action.left {
     right: auto;
-    left: -0.3em;
+    left: -10px;
   }
   .round-action:hover {
       opacity: 1;
@@ -475,7 +513,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 }
 
 .directory-thumb-background {
-    background-color: black;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+}
+
+#servers-list .directory-thumb-background {
+    background-image: url('../images/offline.png');
+}
+
+#servers-list .directory:hover .directory-thumb {
+    opacity: 1;
 }
 
 .directory-thumb {
@@ -483,7 +531,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
     padding-bottom: 80%;
     background-size: cover;
     background-position: center center;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .directory-inner.thumbnail .glyphicon-exclamation-sign {

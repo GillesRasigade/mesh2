@@ -19,13 +19,14 @@ mesh
         controller:'LoginController',
         templateUrl:'partials/login.html'
     })
-    .when('/about', {
-        controller:'AboutController',
-        templateUrl:'partials/about.html'
+    .when('/doc', {
+        controller:'DocumentationController',
+        templateUrl:'partials/doc.html'
     })
     .when('/servers', {
         controller:'ServersController',
-        templateUrl:'partials/servers.html'
+        templateUrl:'partials/servers.html',
+        reloadOnSearch: false
     })
     .when('/:path*?', {
         controller:'ListController',
@@ -48,31 +49,40 @@ mesh
 .controller('LogoutController', ['$scope','$location', function($scope,$location) {
     console.log( 'logout' )
     
-    // Remove user authentication data:
-    delete mesh._auth;
-    localStorage.removeItem('auth');
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
     
-    // User profile removing:
-    delete mesh._profile;
-    localStorage.removeItem('profile');
-    document.getElementById('signin').innerHTML = '<signin></signin>';
+    if ( !mesh._offline ) {
     
-    // Action on google api:
-    if ( window.gapi ) {
-        if ( gapi.auth ) {
-            gapi.auth.signOut();
-        }
+        // Remove user authentication data:
+        delete mesh._auth;
+        localStorage.removeItem('auth');
         
-        setTimeout(function(){
-            gapi.signin.go('signinButton')
-        },250);
+        // User profile removing:
+        delete mesh._profile;
+        localStorage.removeItem('profile');
+        document.getElementById('signin').innerHTML = '<signin></signin>';
+        
+        // Action on google api:
+        if ( window.gapi ) {
+            if ( gapi.auth ) {
+                gapi.auth.signOut();
+            }
+            
+            setTimeout(function(){
+                gapi.signin.go('signinButton')
+            },250);
+        }
     }
     
     // Redirection to the login page:
     //$location.path( '/login' );
 }])
 .controller('LoginController', ['$scope','$location', function($scope,$location) {
-    console.log( 'login' )
+    console.log( 'login' , $location.search() )
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
     
     if ( window.gapi ) {
         setTimeout(function(){
@@ -94,7 +104,7 @@ mesh
     
     // Require the user to be logged in:
     // if ( undefined === mesh._auth ) $location.path('/logout');
-    if ( !meshio.checkAuth() ) return $location.path('/logout');
+    if ( !mesh._offline && !meshio.checkAuth() ) return $location.path('/logout');
     
     // Application path definition:
     var path = '/';
@@ -124,8 +134,19 @@ mesh
     $scope.servers = mesh._servers;
     $scope.settings = settings;
     
+    console.log( '132 path:' , path );
     
-    localStorage.setItem( 'route' , $route.current.params.path );
+    // Redirect user if no servers is configured:
+    if ( !$scope.servers || !$scope.servers.length ) {
+        return $location.path('/servers');
+    }
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','visible');
+    angular.element( document.getElementById('s') ).css('visibility','visible');
+    
+    if ( $route.current.params.path ) {
+        localStorage.setItem( 'route' , $route.current.params.path );
+    }
     
     $scope.search = function() {
         var delay = 500;
@@ -162,10 +183,19 @@ mesh
     }
     
     $s.off('keyup').on('keyup',function(event){
-        console.log( 164 , event.target.value );
-        $scope.s = event.target.value;
-        try{ $scope.$digest(); } catch(e){}
-        $scope.search();
+        
+        var charCode = event.which || event.keyCode;
+        var charStr = String.fromCharCode(charCode);
+        
+        if (charCode == 27) {
+            event.target.value = '';
+        }
+        
+        if ( charCode == 27 || /[a-z0-9]/i.test(charStr)) {
+            $scope.s = event.target.value;
+            try{ $scope.$digest(); } catch(e){}
+            $scope.search();
+        }
     })
     
     $scope.breadcrumb = function() {
@@ -303,6 +333,9 @@ mesh
                                     });
                             },50);
                         }
+                    }, function(){
+                        $scope.busy = false;
+                        try{ $scope.$digest(); } catch(e){}
                     })
             }
         } else {
@@ -851,11 +884,33 @@ mesh
     $scope.tree();
 }])
 
-.controller('ServersController', ['$scope','$rootScope','$location','meshio', function($scope,$rootScope,$location,meshio) {
+.controller('ServersController', ['$scope','$rootScope','$location','$route','meshio', function($scope,$rootScope,$location,$route,meshio) {
 
-    if ( !meshio.checkAuth() ) return $location.path('/logout');
+    if ( !mesh._offline && !meshio.checkAuth() ) return $location.path('/logout');
+    console.log( 899 , $location.absUrl() , $location.search() );
+
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
 
     $scope.servers = $rootScope.servers;
+    $scope.statistics = {};
+    $scope.mesh = mesh;
+    
+    angular.element( document.getElementById('breadcrumb-parent') ).css('visibility','hidden');
+    angular.element( document.getElementById('s') ).css('visibility','hidden');
+    
+    localStorage.setItem( 'route' , '/servers' );
+    
+    window.onkeypress = null;
     
     if ( undefined === $scope.servers && !mesh._servers ) {
         
@@ -876,7 +931,44 @@ mesh
         $scope.servers = mesh._servers;
     }
     
-    console.log( 568 , $scope.servers );
+    
+    
+    if ( $scope.servers ) {
+        angular.forEach($scope.servers,function(o,i){
+            
+            console.log( 89 , o , i );
+            
+            setTimeout(function(){
+                meshio
+                    .statistics( o.base , o.id )
+                    .then(function( data ){
+                        
+                        
+                        var stats = {};
+                        angular.forEach( data , function (p,j){
+                            angular.forEach( p , function(q,k){
+                                stats[k] = undefined === stats[k] ? q : stats[k] + q ;
+                            })
+                        })
+                        
+                        console.log( 896 , stats , data );
+                        $scope.statistics[o.id] = stats;
+                        
+                        try{ $scope.$digest(); } catch(e){}
+                        
+                    });
+            },250);
+        });
+    }
+    
+    $scope.remove = function ( i ) {
+        if ( confirm('Remove this server ?') ) {
+            $scope.servers.splice(i,1);
+            $scope.save();
+            
+            try{ $scope.$digest(); } catch(e){}
+        }
+    }
     
     $scope.save = function() {
         
@@ -886,6 +978,14 @@ mesh
         
         localStorage.setItem( 'servers' , JSON.stringify( mesh._servers ) );
         
+    }
+    
+    if ( window.location.hash.match('/\?/') ) {
+        var sharedServer = meshio.getSharedObject( $location );
+        if ( sharedServer ) {
+            $scope.servers.push( sharedServer );
+            $scope.save();
+        }
     }
     
 }])

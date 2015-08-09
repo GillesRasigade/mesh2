@@ -23,6 +23,15 @@
     <div id="upload-progress"></div>
 </div>
 
+
+<div ng-if="busy" id="loading-message" class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <i class="fa fa-circle-o-notch fa-spin"></i> Loading...
+        </div>
+    </div>
+</div>
+
 <div id="list" when-scrolled="load(true)">
 
 <!--p>{{ (folders|type:'directory').length }} folders and {{ (folders|type:'file').length }} </p-->
@@ -111,7 +120,7 @@ line-height: 45px;">
                                         </ul>
                                     </div>
                                     <div class="directory-name" ng-bind-html="folder.path | rm:path | rm:'^.*\/' | highlight:s | rm:'\\d{4}-\\d{2}-\\d{2}[^ ]*'"></div>
-                                    <div class="directory-details" ng-bind-html="folder | details:this "></div>
+                                    <div class="directory-details" ng-bind-html="folder | details:this"></div>
                                 </div>
                             </div>
                         </div>

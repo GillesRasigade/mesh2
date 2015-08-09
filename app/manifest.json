@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Mesh²",
     "description": "Media Server For Humans",
-    "version": "1.0",
+    "version": "0.1.0",
     "icons": {
         "128": "images/favicon-128.png",
         "64": "images/favicon-64.png",
@@ -10,10 +10,10 @@
     },
     "app": {
         "urls": [
-            "http://rasigade.fr/mesh2/index.html#/login"
+            "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html"
         ],
         "launch": {
-            "web_url": "http://rasigade.fr/mesh2/index.html#/"
+            "web_url": "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html#/servers"
         }
     },
     "permissions": [

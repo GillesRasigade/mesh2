@@ -8,9 +8,18 @@ var mesh = angular.module('mesh', ['components','ngResource','ngRoute','ngSaniti
 
 var serverKey = '12345';
 
+mesh._offline = false;
+// window.onoffline = function(){
+//     mesh._offline = true;
+// }
+// window.ononline = function(){
+//     // mesh._offline = false;
+// }
 
-/*mesh._auth = {};
-mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJYa7cAVUk";*/
+
+
+// mesh._auth = {};
+// mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJYa7cAVUk";
 
 // Google OAuth2 authentication callback
 (function() {
@@ -20,6 +29,8 @@ mesh._auth.access_code = "ya29.mABQ9CHCyuhX9lIOQxQdlW22VB-Ad8B-oCmlV_L18ngmmlfJY
 })();
 
 var signinCallback = function (authResult) {
+    
+    // console.log(33,authResult);
     
   if (authResult['status']['signed_in']) {
     // Update the app to reflect a signed in user
@@ -41,7 +52,7 @@ var signinCallback = function (authResult) {
         gapi.client.load('oauth2', 'v2', function() {
             var request = gapi.client.oauth2.userinfo.get();
             request.execute(function(profile){
-                console.log( profile );
+                console.log( 44 , profile );
                 
                 mesh._profile = profile;
                 
@@ -53,6 +64,8 @@ var signinCallback = function (authResult) {
         // redirect to the last opened folder or servers list:
         if ( localStorage.getItem( 'route' ) ) {
             window.location.hash = localStorage.getItem( 'route' );
+        } else if ( window.location.hash ) {
+            window.location.hash = window.location.hash.replace(/#\/[^?]*/,'#/servers');
         } else {
             window.location.hash = '#/servers';
         }
@@ -73,23 +86,75 @@ var signinCallback = function (authResult) {
   }
 }
 
+window.storage = {
+    set: function ( item , value , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            var data = {};
+            data[item] = value;
+            chrome.storage.local.set(data);
+        } else {
+            localStorage.setItem(item,JSON.stringify(value));
+        }
+    },
+    get: function ( item , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            chrome.storage.local.get(item,callback)
+        } else {
+            var value = localStorage.getItem(item);
+            return callback( value ? JSON.parse(value) : null );
+        }
+    },
+    remove: function ( item , callback ) {
+        if ( window.chrome && chrome.storage && chrome.storage.local ) {
+            chrome.storage.local.remove(item,callback)
+        } else {
+            var value = localStorage.removeItem(item);
+            return callback();
+        }
+    }
+}
+
 // Save the auth data for reuse:
+var f = [
+    function() {
+        storage.getItem('auth',function(result){
+            mesh._auth = result;
+            console.log( 109 , result );
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('profile',function(result){
+            mesh._profile = result;
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('servers',function(result){
+            mesh._servers = result;
+            f[++i]();
+        })
+    },
+    function() {
+        storage.getItem('route',function(result){
+            window.location.hash = result;
+        })
+    },
+];
+// f[0]();
+
 mesh._auth = JSON.parse(localStorage.getItem('auth'));
 mesh._profile = JSON.parse(localStorage.getItem('profile'));
 
 mesh._servers = localStorage.getItem('servers');
 if ( !mesh._servers ) {
-    mesh._servers = null;
-    // mesh._servers = [
-    //     {
-    //         "id": "local",
-    //         "api": "http://localhost:8080/12345"
-    //     }
-    // ]
+    mesh._servers = [];
 } else {
     mesh._servers = JSON.parse( mesh._servers );
 }
 
-if ( localStorage.getItem( 'route' ) ) {
-    window.location.hash = localStorage.getItem( 'route' );
+if ( !window.location.hash.match('/\?/') ) {
+    if ( localStorage.getItem( 'route' ) ) {
+        window.location.hash = localStorage.getItem( 'route' );
+    }
 }

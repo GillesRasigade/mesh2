@@ -4,14 +4,45 @@
     
     <div class="col-lg-12" style="text-align: right;">
     
-        <button type="button" class="btn btn-success" ng-click="servers[servers.length] = {};"><i class="glyphicon glyphicon-hdd"></i> New</button>
+        <button type="button" class="btn btn-success" ng-click="servers.push({});"><i class="glyphicon glyphicon-hdd"></i> New</button>
         
         <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
     </div>
     
+    <div ng-if="!servers || 0 == servers.length">
+        <h3>Servers configuration</h3>
+        
+        <blockquote>
+            <p><i>You did not have configured servers yet. Please let us help you in configuring your first one.</i></p>
+        </blockquote>
+
+        <p>
+            Use the buttons on the top right corner of this screen to add new servers and save configuration.
+        </p>
+        
+        <img src="https://www.clipular.com/c/4717660857171968.png?k=ncL-jBLJtjUcSbBxTGxkTW7QCjc" class="img-responsive img-thumbnail center-block" alt="Responsive image"/>
+        
+        <p>
+            To proceed, you just need to know a Mesh² server up and running.
+        </p>
+        
+        <dl class="dl-horizontal">
+          <dt>Name</dt>
+          <dd>Your server name.<br/>ie: <code>My Photos</code></dd>
+          
+          <dt>URL</dt>
+          <dd>Mesh² server URL.<br/>ie: <code>http://localhost:8080/12345</code></dd>
+          
+          <dt>Base</dt>
+          <dd>Path on the server to access.<br/>ie: <code>Photos/</code></dd>
+        </dl>
+        
+        
+    </div>
+    
     <div ng-repeat="(i,server) in servers track by $index" class="directory col-lg-3 col-md-3 col-sm-4 col-xs-6">
     
-        <div class="directory-inner thumbnail" title="{{ folder.path | rm:path }}">
+        <div class="directory-inner thumbnail" title="{{ server.id }}">
             <a href="#/{{ server.id }}/{{ server.base ? server.base : '' }}">
                 <div class="directory-thumb-background">
                     <div class="directory-thumb" style="background-image: url('{{ '/' + (server.base ? server.base : '') | thumb:500:500 | server:server.id }}');"></div>
@@ -20,13 +51,23 @@
             </a>
             <div class="caption">
                 
-                <input type="text" placeholder="HDD name" class="form-control" id="server-{{ i }}-id" ng-model="server.id" value="{{ server.id }}"/>
+                <input type="text" placeholder="My Photos" class="form-control" id="server-{{ i }}-id" ng-model="server.id" value="{{ server.id }}"/>
             
-                <input type="text" placeholder="Mesh² API: http://media.myserver.io" class="form-control" id="server-{{ i }}-api" ng-model="server.api" value="{{ server.api }}"/>
+                <input type="text" placeholder="Mesh² API: http://localhost:8080/12345" class="form-control" id="server-{{ i }}-api" ng-model="server.api" value="{{ server.api }}"/>
                 
-                <input type="text" placeholder="Mesh² base: /photos" class="form-control" id="server-{{ i }}-base" ng-model="server.base" value="{{ server.base }}"/>
+                <input type="text" placeholder="Mesh² base: Photos/" class="form-control" id="server-{{ i }}-base" ng-model="server.base" value="{{ server.base }}"/>
                 
-                <button type="button" class="btn btn-link" ng-click="servers.splice(i,1);">Delete</button>
+                <br/>
+                
+                <div class="text-right">
+                    <div class="directory-details" ng-bind-html="server.id | details:this"></div>
+                    <br/>
+                    <button type="button" class="btn btn-link btn-xs"><a target="_blank" class="text-info" href="{{ server | share:'server' }}"><i class="fa fa-share-alt"></i></a></button>
+                    <button ng-if="'https' == server.api.substr(0,5)" type="button" class="btn btn-link btn-xs"><a href="{{ server.api + '/certificate/?&access_token=' + mesh._auth.access_token }}" target="_self"><i class="fa fa-certificate"></i></a></button>
+
+                    <button type="button" class="btn btn-danger btn-xs" ng-click="remove(i);">Delete</button>
+                </div>
+                
                 
             </div>
         </div>

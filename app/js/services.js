@@ -31,7 +31,12 @@ mesh
     
     this.request = function ( config ) {
         
-        if ( !mesh._auth ) return window.location.hash = '#/login';
+        if ( !mesh._offline && !mesh._auth ) return window.location.hash = '#/login';
+    
+        if ( false && mesh._offline ) {
+            console.log( 'Service request offline' );
+            return ( null );
+        }
     
         // Parameter initialization:
         config = config ? config : {};
@@ -50,8 +55,10 @@ mesh
         
         // config.url = this.url ( config );
         
-        config.params.access_token = mesh._auth.access_token;
-    
+        if ( mesh._auth ) {
+            config.params.access_token = mesh._auth.access_token;
+        }
+        
         // Perform the request:
         var request = $http(config);
 
@@ -63,10 +70,30 @@ mesh
             // Return the
             return( response.data.data );
             
-        }, function(response){              // ERROR
+        }, function(response,status){              // ERROR
             
             if ( 401 === response.status ) {
                 return window.location.hash = '#/logout';
+            }
+            
+            // console.log(79,response.status,config);
+            if ( false && 0 === response.status ) {
+                $http.get( config.url ).
+                  success(function(data, status, headers) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                  }).
+                  error(function(data, status, headers) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    // console.log( 88 , data , status , headers , config );
+                    if ( status === response.status ) {
+                        if ( confirm('To access the server "'+config.server+'", you are requested to accept the self-signed certificate located here:\n\n> '+url+'\n\nThis action is required only one time and you must understand the risks and trust the source.\n\nAfter accepting, please refresh this page.\n\nDo you want to proceed right now ?') ) {
+                            // window.location = config.url;
+                            window.open(url+'/accept-certificate/?&access_token=' + mesh._auth.access_token,'Certificate acceptance');
+                        }
+                    }
+                });
             }
             
             // The API response from the server should be returned in a
@@ -351,6 +378,36 @@ mesh
         }).then(function(){
             console.log('uploaded');
         })
+    }
+    
+    this.getSharedObject = function ( $location ) {
+        
+        var object = null;
+        var search = $location.search();
+        if ( search ) {
+            // Get the share object:
+            // var share = search.replace( /.*share=([^&$]*).*/ , '$1' );
+            var share = search.share;
+            
+            if ( share ) {
+                try {
+                    object = JSON.parse( atob( share ) );
+                } catch ( e ) {}
+                
+                delete search.share;
+                $location.search( search );
+            }
+        }
+        
+        // Remove the search part:
+        // window.history.pushState( 'reload' , 'Mesh²' , window.location.href.replace(/\?[^#]*/,'') );
+        // setTimeout(function(){
+        //     // window.history.pushState('page2', 'Title', window.location.href.replace(/\?[^#]*/,''));
+            // var url = window.location.href.replace(/\?[^#]*/,'');
+            // window.history.pushState({path:url},'', url);
+        // },1000);
+        
+        return object;
     }
     
 })

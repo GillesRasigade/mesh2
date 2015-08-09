@@ -11,7 +11,17 @@
     ],
     "users": {
         "google.account@gmail.com": {
-            "admin": true
+            "permissions": [ "GET" , "POST" , "PUT" , "DELETE" ],
+            ">>": "Mandatory - User rights and permissions.",
+
+            "admin": true,
+            ">>": "User admin definition",
+
+            "base": "../",
+            ">>": "User base path definition",
+
+            "allow": ".*",
+            ">>": "Restrict specific files and folders to a following pattern"
         }
     },
     "ssl": {

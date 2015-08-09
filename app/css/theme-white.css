@@ -1,7 +1,7 @@
 
 body,
 .navbar.header {
-    background: #fff;
+    background: #f0f0f0;
     box-shadow: none;
     border-color: #eee;
     color: #000;
@@ -20,6 +20,18 @@ background: -ms-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(221,221,221,1)
 background: linear-gradient(to bottom,  rgba(230,230,230,1) 0%,rgba(221,221,221,1) 52%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
 
+<<<<<<< HEAD
+=======
+}
+
+.navbar.footer {
+    display: none;
+    background: rgba(255,255,255,0.75);
+    border-top: 1px solid rgba(232,232,232,0.75);
+    color: #333;
+    min-height: 20px;
+    text-align: center;
+>>>>>>> 2590d38e8500e4a3215e07f42a0ac9ef5e9db388
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -63,7 +75,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 .video.thumb,
 .image-thumb,
 .directory-thumb {
-    background-color: #eee;
+    background-color: transparent;
 }
 
 .directory-name { color: #666; }

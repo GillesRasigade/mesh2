@@ -24,16 +24,21 @@ mesh
   return function(folder,$scope) {
         var text = '';
         
+        var _folder = folder;
+        
         // Date formatting:
-        var date = folder.path.replace(/^.*\//,'').replace(/^(\d{4}-\d{2}-[^ ]*)? .*$/,'$1');
-        if ( date.match(/^\d{4}-\d{2}-\d{2}.*/) ) {
-            //text += ( new Date( date.replace(/,.*$/,'') ) ).toDateString();
-            text += date + ' &nbsp; ';
+        if ( folder.path ) {
+            var date = folder.path.replace(/^.*\//,'').replace(/^(\d{4}-\d{2}-[^ ]*)? .*$/,'$1');
+            if ( date.match(/^\d{4}-\d{2}-\d{2}.*/) ) {
+                //text += ( new Date( date.replace(/,.*$/,'') ) ).toDateString();
+                text += date + ' &nbsp; ';
+            }
+            
+            _folder = folder.path.replace(/^.*\//,'');
         }
         
         // Other statistics:
         // ...
-        var _folder = folder.path.replace(/^.*\//,'');
         if ( $scope.statistics && $scope.statistics[_folder] ) {
             if ( $scope.statistics[_folder].size ) {
                 var size = $scope.statistics[_folder].size;
@@ -81,7 +86,7 @@ mesh
             url += '/thumb/' + escape( path ) + '/?';
         }
         
-        url += '&access_token=' + mesh._auth.access_token;
+        url += '&access_token=' + ( mesh._offline ? '' : mesh._auth.access_token );
             
         return url;
         
@@ -126,5 +131,21 @@ mesh
 .filter('starred', function(){
     return function(path){
         return path.match('-star.') ? 'starred' : '';
+    }
+})
+
+.filter('share', function(){
+    return function ( object , type ) {
+        
+        var resource = '';
+        // console.log(141,type,object);
+        
+        switch ( type ) {
+            case 'server':
+                resource = btoa( JSON.stringify( object ) );
+                break;
+        }
+        var url = window.location.href;
+        return url.replace( /#(.*)$/ , '#$1?share=' + resource );
     }
 })
