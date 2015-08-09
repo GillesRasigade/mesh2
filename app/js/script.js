@@ -158,3 +158,4 @@ if ( !window.location.hash.match('/\?/') ) {
         window.location.hash = localStorage.getItem( 'route' );
     }
 }
+

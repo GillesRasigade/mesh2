@@ -375,11 +375,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', end
 
 #list {
     position: fixed;
-    left: 0px; right: 0px; top: 50px; bottom: 0px;
+    left: 0px; right: 0px; top: 0px; bottom: 0px;
     /*top: 10px;*/
     overflow-y: auto;
     padding-bottom: 5em;
-    padding-top: 10px;
+    padding-top: 60px;
 }
 
 #show-panel {
