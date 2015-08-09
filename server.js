@@ -124,33 +124,34 @@ var checkIP = function (config, req) {
 /**
  * Check Google OAuth2 access token
  */
-var checkToken = function ( config, req, callback , error ) {
+var checkToken = function ( req, callback , error ) {
     // REF: http://stackoverflow.com/questions/12296017/how-to-validate-a-oauth2-0-access-token-for-a-resource-server
     // Request: https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=1/fFBGRNJru1FQd44AzqT3Zg
+    console.log( "checkToken" , req.params.access_token );
     if ( req.params.access_token ) {
         
         var cache = require('memory-cache');
         
         var _continue = function() {
             
-            config.user = null;
+            req.user = null;
             
             if ( tokeninfo.user ) {
                 
                 // Save the user parameters to the configuration:
-                config.user = tokeninfo.user;
+                req.user = tokeninfo.user;
                 
-                if ( tokeninfo.user.base ) {
+                /*if ( tokeninfo.user.base ) {
                     config.base = tokeninfo.user.base;
                     // Adapt the config.base for each logged in user.
-                }
+                }*/
             }
             
             return callback( true );
         }
         
         var tokeninfo = cache.get('access_token:' + req.params.access_token);
-        //console.log( 146 , tokeninfo );
+        console.log( 146 , tokeninfo );
         if ( tokeninfo && tokeninfo.removeAddress === req.connection.remoteAddress ) {
             return _continue();
             
@@ -193,6 +194,19 @@ var checkToken = function ( config, req, callback , error ) {
         }
             
         return true;
+        
+    } else {
+        
+        console.log( 205 , req.connection.remoteAddress )
+        
+        if ( false && req.connection.remoteAddress.match(/127\.0\.\d+\.\d+/) ) {
+        
+            // Save the user parameters to the configuration:
+            req.user = config.users['gilles.rasigade@gmail.com'];
+                
+            return callback( true );
+            
+        }
     }
     
     return error();
@@ -219,7 +233,7 @@ var checkReq = function (config, req, res, callback ) {
     // Request: https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=1/fFBGRNJru1FQd44AzqT3Zg
     // if ( config.googleOauth || !checkKey(config, req) )
     
-    return checkToken(config,req,callback,function(){
+    return checkToken(req,callback,function(){
         res.send(401);
         return false;
     });
@@ -305,8 +319,10 @@ var createItems = function ( req , res , path , files ) {
     
     var createItem = function (current, relpath, type, link) {
         
+        console.log( 208 , relpath , relpath.replace(req.base,'').replace('//','/') );
+        
         var item = {
-            path: relpath.replace('//','/'),
+            path: relpath.replace(req.base,'').replace(/\/+/,'/'),
             type: type,
             size: fs.lstatSync(current).size,
             atime: fs.lstatSync(current).atime.getTime(),
@@ -323,7 +339,7 @@ var createItems = function ( req , res , path , files ) {
         
         switch ( type ) {
             case 'directory':
-                var child = exec('ls --directory "' + config.base + item.path + '" | wc -l',function (err, stdout, stderr) {
+                var child = exec('ls --directory "' + req.base + item.path + '" | wc -l',function (err, stdout, stderr) {
                     if (err) throw err;
                     
                     item.directory = {
@@ -359,12 +375,12 @@ var createItems = function ( req , res , path , files ) {
     for (var i=0, z=files.length-1; i<=z; i++) {
         if ( files[i] ) {
             current = path + files[i];
-            relpath = current.replace(config.base,"/");
+            relpath = current.replace( req.user && req.user.base ? req.user.base : config.base ,"/");
             (fs.lstatSync(current).isSymbolicLink()) ? link = true : link = false;
             if ( !relpath.match(/\/\./) ) {
                 
                 // Check whether the user has access to this file:
-                var isFiltered = ( config.user.allow && null === current.match( new RegExp( config.user.allow , "i" ) ) );
+                var isFiltered = ( req.user.allow && null === current.match( new RegExp( req.user.allow , "i" ) ) );
                 
                 if ( !isFiltered ) {
                 
@@ -417,18 +433,44 @@ server.get(commandRegEx, function (req, res, next) {
     // Check request
     checkReq(config, req, res, function(){
         
-        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('GET') ) {
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('GET') ) {
             res.send(403);
         }
+        
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
 
         // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ) );
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
         
-        //console.log( 295 , path );
-        
-        // console.log( req.params[1] );
+        console.log( req.params[1] );
         
         switch (req.params[1]) {
+            
+            case 'certificate':
+                
+                // Check HTTPS activation:
+                if (config.ssl.key && config.ssl.cert) {
+                    
+                    res.setHeader('Content-disposition', 'attachment; filename=certificate.crt');
+                    res.setHeader('Content-type', 'application/x-x509-ca-cert');
+                    
+                    
+                    // Read certificate:
+                    var certificate = fs.readFileSync(config.ssl.cert);
+                    res.send( certificate );
+                    
+                }
+                return res.end();
+                break;
+            
+            // Route for the users which need to accept self-signed certificate:
+            case 'accept-certificate':
+                
+                
+                res.setHeader('Content-type', "text/html");
+                return res.end('<html><body><script type="text/javascript">window.close();</script></body></html>');
+                break;
             
             case 'servers':
                 // Send output
@@ -562,11 +604,12 @@ server.get(commandRegEx, function (req, res, next) {
                 switch ( type ) {
                     case 'directory':
                         
-                        var stats = {};
-                        
                         fs.readdir(path, function (err, files) {
-                            if ( err ) throw err;
+                            if ( err ) { console.error( err ); throw err; }
                             
+                            req.stats = {};
+                            console.log( 576 , path , 'reset stats' );
+                        
                             // Sort alphabetically
                             files.sort();
                             
@@ -574,34 +617,43 @@ server.get(commandRegEx, function (req, res, next) {
                             // 1. Directories
                             // 2. Files
                             var f = function(){
+                                console.log( 585 , files.length );
                                 if ( files.length ) {
                                     file = files.shift();
                                     current = (path + '/' + file).replace(/\/+/g,'/');
                                     if ( !current.match(/\/\./) ) {
                                         if (fs.lstatSync(current).isDirectory()) {
                                             
-                                            stats[file] = {};
+                                            req.stats[file] = {};
+                                                console.log( 'd' , file , req.stats[file] );
                                             
                                             var cmd = 'cd "'+current+'"; find . -type d | wc -l';
                                             var child = exec(cmd,function (err, stdout, stderr) {
-                                                if (err) throw err;
+                                                if ( err ) { console.error( err ); throw err; }
                                                 
-                                                stats[file].directories = parseInt( stdout , 10 ) - 1;
+                                                console.log( 'd' , req.stats , file , req.stats[file] );
+                                                req.stats[file].directories = parseInt( stdout , 10 ) - 1;
                                                 
                                                 var cmd = 'cd "'+current+'"; find . -type f -regextype posix-egrep -iregex ".*'+config.types.image+'" | wc -l';
                                                 var child = exec(cmd,function (err, stdout, stderr) {
-                                                    if (err) throw err;
-                                                    stats[file].images =parseInt( stdout , 10 );
+                                                    if ( err ) { console.error( err ); throw err; }
+                                                    
+                                                    console.log( 'i' , file , req.stats , req.stats[file] );
+                                                    req.stats[file].images =parseInt( stdout , 10 );
                                                     
                                                     var cmd = 'cd "'+current+'"; find . -type f -regextype posix-egrep -iregex ".*'+config.types.video+'" | wc -l';
                                                     var child = exec(cmd,function (err, stdout, stderr) {
-                                                        if (err) throw err;
-                                                        stats[file].videos =parseInt( stdout , 10 );
+                                                        if ( err ) { console.error( err ); throw err; }
+                                                        
+                                                        console.log( 'v' , file , req.stats , req.stats[file] );
+                                                        req.stats[file].videos =parseInt( stdout , 10 );
                                                         
                                                         var cmd = 'cd "'+current+'"'+"; du | tail -1 | sed 's/\t\.*$//'";
                                                         var child = exec(cmd,function (err, stdout, stderr) {
-                                                            if (err) throw err;
-                                                            stats[file].size =parseInt( stdout , 10 );
+                                                            if ( err ) { console.error( err ); throw err; }
+                                                            
+                                                            console.log( 'f' , req.stats[file] );
+                                                            req.stats[file].size =parseInt( stdout , 10 );
                                                             f();
                                                         });
                                                     });
@@ -612,7 +664,7 @@ server.get(commandRegEx, function (req, res, next) {
                                     } else f();
                                 } else {
                                     // Send output
-                                    resSuccess(stats, res);
+                                    resSuccess(req.stats, res);
                                 }
                             }; f();
                             
@@ -648,7 +700,7 @@ server.get(commandRegEx, function (req, res, next) {
                                 // console.log( files[i] , files[i].match(/\.cover/) );
                                 if ( files[i].match(/\.cover/) ) {
                                     console.log('read from .cover');
-                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(config.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
+                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(req.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
                                     
                                     res.writeHead(302, {
                                       'Location': url,
@@ -665,12 +717,12 @@ server.get(commandRegEx, function (req, res, next) {
                                     
                                     // console.log( 614 , path.replace(config.base,'') + '/' +files[i] );
                                     // Copy the file to the directory temporary folder:
-                                    var absolute = path.replace(config.base,'') + '/' +files[i];
+                                    var absolute = path.replace(base,'') + '/' +files[i];
                                     var cover = absolute.replace(/\/[^\/]*(\.[^\.]+)$/,'/.cover$1');
  
                                     // console.log( 619 , config.base+absolute, config.base+cover );
                                         
-                                    fs.copy(config.base+absolute, config.base+cover, function(err){
+                                    fs.copy(base+absolute, base+cover, function(err){
                                         if (err) throw err;
                                         
                                         var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=300&h=300&access_token='+req.query['access_token'];
@@ -695,7 +747,7 @@ server.get(commandRegEx, function (req, res, next) {
                                 if ( i < files.length ) {
                                     
                                     current = (path + files[i]).replace(/\/+/,'/');
-                                    relpath = current.replace(config.base,"");
+                                    relpath = current.replace(base,"");
                                     
                                     i++;
                                     
@@ -807,7 +859,7 @@ server.get(commandRegEx, function (req, res, next) {
      	        if ( _config.width || _config.height ) {
      	            
      	            // Temporary image name:
-     	            var tmp = ( config.tmp + '/' + dirname.replace(config.base,'') + '/' + basename +
+     	            var tmp = ( config.tmp + '/' + dirname.replace(base,'') + '/' + basename +
                         ( _config.width ? '-w='+_config.width : '' ) +
                         ( _config.height ? '-h='+_config.height : '' ) +
                         '.'+extension ).replace(/\/+/g,'/');
@@ -1019,13 +1071,16 @@ server.post(commandRegEx, function (req, res, next) {
     // Check request
     checkReq(config, req, res, function(){
         
-        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('POST') ) {
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('POST') ) {
             res.send(403);
         }
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
         
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
+    
         switch (req.params[1]) {
             
             // Creates a new directory
@@ -1078,7 +1133,7 @@ server.post(commandRegEx, function (req, res, next) {
             // Supply destination as full path with file or folder name at end
             // Ex: http://yourserver.com/{key}/copy/folder_a/somefile.txt, destination: /folder_b/somefile.txt
             case "copy":
-                var destination = config.base + "/" + req.params.destination;
+                var destination = base + "/" + req.params.destination;
                 if (checkPath(path) && checkPath(destination)) {
                     fs.copy(path, destination, function(err){
                         if (err) {
@@ -1116,13 +1171,16 @@ server.put(commandRegEx, function (req, res, next) {
     // Check request
     checkReq(config, req, res, function(){
         
-        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('PUT') ) {
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('PUT') ) {
             res.send(403);
         }
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[2] ));
         
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[2] ) );
+    
         switch (req.params[1]) {
             
             // Rename a file or directory
@@ -1202,13 +1260,13 @@ server.put(commandRegEx, function (req, res, next) {
             
             case "cover":
                 // Make sure it exists
-                if (fs.existsSync(path) && fs.existsSync(config.base +'/'+req.params.target) ) {
+                if (fs.existsSync(path) && fs.existsSync(base +'/'+req.params.target) ) {
                     var cover = req.params.target + '/' + decodeURIComponent( unescape( path.replace(/^.*\/[^\/]*(\.[^\.]+)$/,'.cover$1')));
                     
                     
-                    console.log( 'cover copy' , path, config.base+'/'+cover );
+                    console.log( 'cover copy' , path, base+'/'+cover );
                     
-                    fs.copy( path, config.base+'/'+cover, function(err){
+                    fs.copy( path, base+'/'+cover, function(err){
                         if(err)throw err;
                         // console.log( 'rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ ') );
                         var child = exec('rm -f ' + (config.tmp + '/' + cover.replace(/(-[^\/-]+)?\.[^\/\.]*$/,'*')).replace(/ /g,'\\ '),function (err, stdout, stderr) {});
@@ -1237,13 +1295,16 @@ server.del(pathRegEx, function (req, res, next) {
     // Check request
     checkReq(config, req, res, function() {
         
-        if ( !config.user || !config.user.permissions || -1 === config.user.permissions.indexOf('DELETE') ) {
+        if ( !req.user || !req.user.permissions || -1 === req.user.permissions.indexOf('DELETE') ) {
             res.send(403);
         }
-    
-        // Set path
-        var path = decodeURIComponent( unescape( config.base + "/" + req.params[1] ));
         
+        // Base definition
+        var base = req.base = req.user && req.user.base ? req.user.base : config.base;
+
+        // Set path
+        var path = decodeURIComponent( unescape( base + "/" + req.params[1] ) );
+    
         console.log( 'Removing: ' , path );
         
         // Make sure it exists
