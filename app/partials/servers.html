@@ -45,7 +45,7 @@
         <div class="directory-inner thumbnail" title="{{ server.id }}">
             <a href="#/{{ server.id }}/{{ server.base ? server.base : '' }}">
                 <div class="directory-thumb-background">
-                    <div class="directory-thumb" style="background-image: url('{{ '/' + (server.base ? server.base : '') | thumb:500:500 | server:server.id }}');"></div>
+                    <div class="directory-thumb" style="background-image: url('{{ '/' + (server.base ? server.base : '') | thumb:1024:1024 | server:server.id }}');"></div>
                 </div>
                 <!--<i class="glyphicon glyphicon-exclamation-sign"></i>-->
             </a>

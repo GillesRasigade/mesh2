@@ -441,7 +441,7 @@ mesh
         switch ( type ) {
             case 'image':
                 $scope.showPanel = true;
-                var src = $filter('server')($filter('thumb')(object.path,1024,1024),$scope);
+                var src = $filter('server')($filter('thumb')(object.path,2048,2048),$scope);
                 var $img = angular.element(document.getElementById('show-image'));
                 $img.addClass('fadeout');
                 $img.attr('data-hashKey',object.$$hashKey);
@@ -551,7 +551,7 @@ mesh
                 try{ $scope.$digest(); } catch(e){}
                 
                 // Force updating the album cover:
-                var src = $filter('server')($filter('thumb')(target,500,500),$scope)+'&_='+(new Date).getTime();
+                var src = $filter('server')($filter('thumb')(target,1024,1024),$scope)+'&_='+(new Date).getTime();
                 // console.log( 509 , 'preload album thumb on cover change')
                 var img = new Image();
                 img.src = src;
@@ -722,7 +722,7 @@ mesh
                 
                 // Get the image thumb:
                 var $image = angular.element( document.getElementById( image.$$hashKey + '-thumb' ));
-                var src = $filter('server')($filter('thumb')(image.path,1000,1000),$scope)+'&_='+(new Date).getTime();
+                var src = $filter('server')($filter('thumb')(image.path,2048,2048),$scope)+'&_='+(new Date).getTime();
                 
                 var img = new Image();
                 img.onload = function () {
@@ -829,7 +829,7 @@ mesh
                                     ( date != directory ? '<br/><span class="tree-details">' + date + '</span>' : '') +
                                 '</a>\
                                 <div class="tree-thumb" style="background-image: url(\''+
-                                    $filter('server')($filter('thumb')(path+'/'+directory,100,100),$scope)+
+                                    $filter('server')($filter('thumb')(path+'/'+directory,256,256),$scope)+
                                 '\');">\
                             </li>');
                         }

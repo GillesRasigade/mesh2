@@ -99,7 +99,7 @@ line-height: 45px;">
                                 <a href="#/{{server}}{{folder.path}}">
                                     <div class="directory-thumb-background">
                                         <!--div class="directory-thumb" style="background-image: url('{{ folder.path | thumb:500:500 | server:this }}{{ folder._r ? '&_=' + folder._r : '' }}');"></div!-->
-                                        <div class="directory-thumb" ng-style="{ 'background-image':'url(' + ( folder.path | thumb:500:500 | server:this ) + ( folder._r ? '&_=' + folder._r : '' ) + ')' }"></div>
+                                        <div class="directory-thumb" ng-style="{ 'background-image':'url(' + ( folder.path | thumb:1024:1024 | server:this ) + ( folder._r ? '&_=' + folder._r : '' ) + ')' }"></div>
                                     </div>
                                 </a>
                                 <div class="caption">
@@ -158,8 +158,8 @@ line-height: 45px;">
                                 <!--a href="#/{{server}}{{image.path}}"-->
                                 <a ng-if="'image'==image.type" href="javascript:void(0);" ng-click="show(image.type,image)">
                                     <span class="star glyphicon {{ 'starred' == (image.path | starred ) ? 'glyphicon-star starred' : 'glyphicon-star-empty' }}" ng-click="star(image.path,$event)"></span>
-                                    <div ng-if="$index == 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:1000:1000 | server:this }}');"></div>
-                                    <div ng-if="$index != 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:500:500 | server:this }}');"></div>
+                                    <div ng-if="$index == 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:2048:2048 | server:this }}');"></div>
+                                    <div ng-if="$index != 0" id="{{ image.$$hashKey }}-thumb" class="image-thumb" style="background-image: url('{{ image.path | thumb:1024:1024 | server:this }}');"></div>
                                 </a>
                                 
                                 
