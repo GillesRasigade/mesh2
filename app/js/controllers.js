@@ -882,6 +882,15 @@ mesh
     }
             
     $scope.tree();
+    
+    // headroom.js initialization:
+    var scroller = document.querySelector("#list");
+    Headroom.options.scroller = scroller;
+    
+    var myElement = document.querySelector(".navbar-fixed-top");
+    var headroom  = new Headroom(myElement);
+    headroom.init();
+    
 }])
 
 .controller('ServersController', ['$scope','$rootScope','$location','$route','meshio', function($scope,$rootScope,$location,$route,meshio) {
