@@ -165,10 +165,8 @@ var checkToken = function ( req, callback , error ) {
                 function(res){
                     res.on('data', function(d) {
                         var json = JSON.parse( d.toString() );
-
-                        //console.log( 162 , json );
-
-                        if ( -1 !== Object.keys(config.users).indexOf(json.email) ) {
+                        
+			if ( -1 !== Object.keys(config.users).indexOf(json.email) ) {
 
                             if ( json.expires_in > 0 ) {
 
@@ -700,8 +698,7 @@ server.get(commandRegEx, function (req, res, next) {
                                 // console.log( files[i] , files[i].match(/\.cover/) );
                                 if ( files[i].match(/\.cover/) ) {
                                     console.log('read from .cover');
-                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(req.base,'') + '/' +files[i] ) + '?w=300&h=300&access_token='+req.query['access_token'];
-
+                                    var url = '/' + req.params[0] + '/image/' + escape( path.replace(req.base,'') + '/' +files[i] ) + '?w=512&h=512&access_token='+req.query['access_token'];
                                     res.writeHead(302, {
                                       'Location': url,
                                       'Content-Type': 'charset=utf-8'
@@ -724,9 +721,7 @@ server.get(commandRegEx, function (req, res, next) {
 
                                     fs.copy(base+absolute, base+cover, function(err){
                                         if (err) throw err;
-
-                                        var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=300&h=300&access_token='+req.query['access_token'];
-
+                                        var url = '/' + req.params[0] + '/image/' + escape( absolute ) + '?w=512&h=512&access_token='+req.query['access_token'];
                                         // console.log( 'URL:' , encodeURI( url ) , files[i] ,config.base );
                                         res.writeHead(302, {
                                           'Location': url,
