@@ -1117,9 +1117,13 @@ server.post(commandRegEx, function (req, res, next) {
                 // Move the tmp file to the correctdirectory:
                 fs.copy(file.path, path+'/'+file.name, function(err){
 
-                    resSuccess({}, res)
+                  // Rename the file on upload:
+                  exec("exiftool -r '-FileName<CreateDate' -d '%Y-%m-%d-%H:%M:%S%%-c.%%le' + '" + path+'/'+file.name + "'", 
+                  function (err, stdout, stderr) {
+                    resSuccess({}, res);
+                  });
 
-                    fs.remove(file.path);
+                  fs.remove(file.path);
 
                 });
 
