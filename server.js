@@ -353,18 +353,19 @@ var createItems = function ( req , res , path , files ) {
     // Sort alphabetically
     files.sort(function(a, b){
 
-        // Sort dated folders counter chronological order
-        if ( a.match(/^\d{4}(-\d{2})?.*\s/) && b.match(/^\d{4}(-\d{2})?.*\s/) ) {
-            if(a.toLowerCase() > b.toLowerCase()) return -1;
-            if(a.toLowerCase() < b.toLowerCase()) return 1;
-            return 0;
-        }
-
-        // console.log(a,b);
-        // Add sorting ordering here
+      if (a.indexOf('.') !== -1 || b.indexOf('.') !== -1 ||
+        !a.match(/^\d{4}(-\d{2})?/) || !b.match(/^\d{4}(-\d{2})?/)) {
         if(a.toLowerCase() < b.toLowerCase()) return -1;
         if(a.toLowerCase() > b.toLowerCase()) return 1;
         return 0;
+      }
+
+      // Sort dated folders counter chronological order
+      if(a.toLowerCase() > b.toLowerCase()) return -1;
+      if(a.toLowerCase() < b.toLowerCase()) return 1;
+      return 0;
+
+      
     });
 
     // Loop through and create two objects
