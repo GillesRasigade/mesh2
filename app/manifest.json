@@ -10,10 +10,10 @@
     },
     "app": {
         "urls": [
-            "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html"
+            "http://cdn.combinatronics.com/billou-fr/mesh2/master/app/index.html"
         ],
         "launch": {
-            "web_url": "http://cdn.rawgit.com/billou-fr/mesh2/master/app/index.html#/servers"
+            "web_url": "http://cdn.combinatronics.com/billou-fr/mesh2/master/app/index.html#/servers"
         }
     },
     "permissions": [
